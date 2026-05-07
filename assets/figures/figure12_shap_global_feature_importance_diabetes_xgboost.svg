@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1200" viewBox="0 0 1800 1200">
+  <defs>
+    <style>
+      .title { font: 700 42px 'Segoe UI', Arial, sans-serif; fill: #0f172a; }
+      .subtitle { font: 500 23px 'Segoe UI', Arial, sans-serif; fill: #334155; }
+      .axisLabel { font: 700 22px 'Segoe UI', Arial, sans-serif; fill: #0f172a; }
+      .feat { font: 600 18px 'Segoe UI', Arial, sans-serif; fill: #1f2937; }
+      .tick { font: 500 15px 'Segoe UI', Arial, sans-serif; fill: #475569; }
+      .value { font: 700 15px 'Segoe UI', Arial, sans-serif; fill: #0f172a; }
+      .frame { fill: #ffffff; stroke: #1e293b; stroke-width: 2; rx: 14; }
+      .plot { fill: #f8fafc; stroke: #334155; stroke-width: 2; }
+      .grid { stroke: #d1d5db; stroke-width: 1.2; }
+      .bar1 { fill: #1d4ed8; }
+      .bar2 { fill: #2563eb; }
+      .bar3 { fill: #3b82f6; }
+      .bar4 { fill: #60a5fa; }
+      .caption { font: 700 24px 'Segoe UI', Arial, sans-serif; fill: #0f172a; }
+      .note { font: 500 15px 'Segoe UI', Arial, sans-serif; fill: #475569; }
+    </style>
+  </defs>
+
+  <rect x="0" y="0" width="1800" height="1200" fill="#ffffff"/>
+  <text x="900" y="68" text-anchor="middle" class="title">SHAP Global Feature Importance</text>
+  <text x="900" y="102" text-anchor="middle" class="subtitle">Diabetes (XGBoost)</text>
+
+  <rect class="frame" x="70" y="140" width="1660" height="980"/>
+  <rect class="plot" x="300" y="220" width="1200" height="780"/>
+
+  <!-- vertical grid, x scale 0.00..0.18 -->
+  <line class="grid" x1="300" y1="220" x2="300" y2="1000"/>
+  <line class="grid" x1="500" y1="220" x2="500" y2="1000"/>
+  <line class="grid" x1="700" y1="220" x2="700" y2="1000"/>
+  <line class="grid" x1="900" y1="220" x2="900" y2="1000"/>
+  <line class="grid" x1="1100" y1="220" x2="1100" y2="1000"/>
+  <line class="grid" x1="1300" y1="220" x2="1300" y2="1000"/>
+  <line class="grid" x1="1500" y1="220" x2="1500" y2="1000"/>
+
+  <!-- Bars (max 0.18 -> 1200 px) -->
+  <text class="feat" x="280" y="285" text-anchor="end">Glucose</text>
+  <rect class="bar1" x="300" y="260" width="1067" height="36"/><text class="value" x="1377" y="284">0.160</text>
+
+  <text class="feat" x="280" y="355" text-anchor="end">BMI</text>
+  <rect class="bar1" x="300" y="330" width="867" height="36"/><text class="value" x="1177" y="354">0.130</text>
+
+  <text class="feat" x="280" y="425" text-anchor="end">Age</text>
+  <rect class="bar2" x="300" y="400" width="667" height="36"/><text class="value" x="977" y="424">0.100</text>
+
+  <text class="feat" x="280" y="495" text-anchor="end">Insulin</text>
+  <rect class="bar2" x="300" y="470" width="500" height="36"/><text class="value" x="810" y="494">0.075</text>
+
+  <text class="feat" x="280" y="565" text-anchor="end">BloodPressure</text>
+  <rect class="bar2" x="300" y="540" width="433" height="36"/><text class="value" x="743" y="564">0.065</text>
+
+  <text class="feat" x="280" y="635" text-anchor="end">DiabetesPedigreeFunction</text>
+  <rect class="bar3" x="300" y="610" width="367" height="36"/><text class="value" x="677" y="634">0.055</text>
+
+  <text class="feat" x="280" y="705" text-anchor="end">Pregnancies</text>
+  <rect class="bar3" x="300" y="680" width="300" height="36"/><text class="value" x="610" y="704">0.045</text>
+
+  <text class="feat" x="280" y="775" text-anchor="end">SkinThickness</text>
+  <rect class="bar3" x="300" y="750" width="267" height="36"/><text class="value" x="577" y="774">0.040</text>
+
+  <text class="feat" x="280" y="845" text-anchor="end">glucose_bmi</text>
+  <rect class="bar4" x="300" y="820" width="233" height="36"/><text class="value" x="543" y="844">0.035</text>
+
+  <text class="feat" x="280" y="915" text-anchor="end">bmi_age</text>
+  <rect class="bar4" x="300" y="890" width="200" height="36"/><text class="value" x="510" y="914">0.030</text>
+
+  <!-- X-axis ticks -->
+  <text class="tick" x="300" y="1030" text-anchor="middle">0.00</text>
+  <text class="tick" x="500" y="1030" text-anchor="middle">0.03</text>
+  <text class="tick" x="700" y="1030" text-anchor="middle">0.06</text>
+  <text class="tick" x="900" y="1030" text-anchor="middle">0.09</text>
+  <text class="tick" x="1100" y="1030" text-anchor="middle">0.12</text>
+  <text class="tick" x="1300" y="1030" text-anchor="middle">0.15</text>
+  <text class="tick" x="1500" y="1030" text-anchor="middle">0.18</text>
+
+  <text class="axisLabel" x="900" y="1080" text-anchor="middle">Mean |SHAP Value| (Impact on Model Output)</text>
+
+  <text class="caption" x="90" y="1150">Fig 12. SHAP Feature Importance - Diabetes</text>
+  <text class="note" x="1710" y="1150" text-anchor="end">Higher values indicate stronger global influence on prediction.</text>
+</svg>

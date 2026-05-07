@@ -1,0 +1,110 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2100" height="1350" viewBox="0 0 2100 1350">
+  <defs>
+    <style>
+      .title { font: 700 46px 'Segoe UI', Arial, sans-serif; fill: #0f172a; }
+      .subtitle { font: 500 24px 'Segoe UI', Arial, sans-serif; fill: #334155; }
+      .label { font: 600 18px 'Segoe UI', Arial, sans-serif; fill: #1f2937; }
+      .metric { font: 700 19px 'Segoe UI', Arial, sans-serif; fill: #0f172a; }
+      .value { font: 700 16px 'Segoe UI', Arial, sans-serif; fill: #ffffff; }
+      .frame { fill: #ffffff; stroke: #1e293b; stroke-width: 2; rx: 14; }
+      .caption { font: 700 24px 'Segoe UI', Arial, sans-serif; fill: #0f172a; }
+      .note { font: 500 15px 'Segoe UI', Arial, sans-serif; fill: #475569; }
+    </style>
+  </defs>
+
+  <rect x="0" y="0" width="2100" height="1350" fill="#ffffff"/>
+  <text x="1050" y="70" text-anchor="middle" class="title">Results Summary Heatmap</text>
+  <text x="1050" y="106" text-anchor="middle" class="subtitle">All Metrics Across All Models</text>
+
+  <rect class="frame" x="60" y="140" width="1980" height="1140"/>
+
+  <!-- Column headers -->
+  <text class="label" x="360" y="250" text-anchor="middle">D-SVM</text>
+  <text class="label" x="530" y="250" text-anchor="middle">D-XGB</text>
+  <text class="label" x="700" y="250" text-anchor="middle">D-LSTM</text>
+  <text class="label" x="870" y="250" text-anchor="middle">H-SVM</text>
+  <text class="label" x="1040" y="250" text-anchor="middle">H-XGB</text>
+  <text class="label" x="1210" y="250" text-anchor="middle">H-LSTM</text>
+  <text class="label" x="1380" y="250" text-anchor="middle">CKD-SVM</text>
+  <text class="label" x="1550" y="250" text-anchor="middle">CKD-XGB</text>
+  <text class="label" x="1720" y="250" text-anchor="middle">CKD-LSTM</text>
+
+  <!-- Row labels -->
+  <text class="metric" x="180" y="350" text-anchor="middle">Accuracy</text>
+  <text class="metric" x="180" y="470" text-anchor="middle">Precision</text>
+  <text class="metric" x="180" y="590" text-anchor="middle">Recall</text>
+  <text class="metric" x="180" y="710" text-anchor="middle">F1-Score</text>
+  <text class="metric" x="180" y="830" text-anchor="middle">ROC-AUC</text>
+
+  <!-- Heatmap cells: x starts at 300, y starts at 290, cell 120x90 gap 50 -->
+  <!-- Accuracy -->
+  <rect x="300" y="290" width="120" height="90" fill="#2f6fa8"/><text class="value" x="360" y="343" text-anchor="middle">0.70</text>
+  <rect x="470" y="290" width="120" height="90" fill="#287c5a"/><text class="value" x="530" y="343" text-anchor="middle">0.73</text>
+  <rect x="640" y="290" width="120" height="90" fill="#2b7563"/><text class="value" x="700" y="343" text-anchor="middle">0.72</text>
+  <rect x="810" y="290" width="120" height="90" fill="#3070a6"/><text class="value" x="870" y="343" text-anchor="middle">0.68</text>
+  <rect x="980" y="290" width="120" height="90" fill="#2f6fa8"/><text class="value" x="1040" y="343" text-anchor="middle">0.68</text>
+  <rect x="1150" y="290" width="120" height="90" fill="#316da9"/><text class="value" x="1210" y="343" text-anchor="middle">0.67</text>
+  <rect x="1320" y="290" width="120" height="90" fill="#26815a"/><text class="value" x="1380" y="343" text-anchor="middle">0.78</text>
+  <rect x="1490" y="290" width="120" height="90" fill="#1e8f53"/><text class="value" x="1550" y="343" text-anchor="middle">0.84</text>
+  <rect x="1660" y="290" width="120" height="90" fill="#22885a"/><text class="value" x="1720" y="343" text-anchor="middle">0.81</text>
+
+  <!-- Precision -->
+  <rect x="300" y="410" width="120" height="90" fill="#2f6fa8"/><text class="value" x="360" y="463" text-anchor="middle">0.69</text>
+  <rect x="470" y="410" width="120" height="90" fill="#287c5a"/><text class="value" x="530" y="463" text-anchor="middle">0.74</text>
+  <rect x="640" y="410" width="120" height="90" fill="#2c7466"/><text class="value" x="700" y="463" text-anchor="middle">0.71</text>
+  <rect x="810" y="410" width="120" height="90" fill="#3070a6"/><text class="value" x="870" y="463" text-anchor="middle">0.67</text>
+  <rect x="980" y="410" width="120" height="90" fill="#2e72a3"/><text class="value" x="1040" y="463" text-anchor="middle">0.70</text>
+  <rect x="1150" y="410" width="120" height="90" fill="#2f71a4"/><text class="value" x="1210" y="463" text-anchor="middle">0.69</text>
+  <rect x="1320" y="410" width="120" height="90" fill="#26815a"/><text class="value" x="1380" y="463" text-anchor="middle">0.79</text>
+  <rect x="1490" y="410" width="120" height="90" fill="#1e8f53"/><text class="value" x="1550" y="463" text-anchor="middle">0.85</text>
+  <rect x="1660" y="410" width="120" height="90" fill="#21895a"/><text class="value" x="1720" y="463" text-anchor="middle">0.82</text>
+
+  <!-- Recall -->
+  <rect x="300" y="530" width="120" height="90" fill="#2f6fa8"/><text class="value" x="360" y="583" text-anchor="middle">0.68</text>
+  <rect x="470" y="530" width="120" height="90" fill="#2a785f"/><text class="value" x="530" y="583" text-anchor="middle">0.72</text>
+  <rect x="640" y="530" width="120" height="90" fill="#2c7466"/><text class="value" x="700" y="583" text-anchor="middle">0.71</text>
+  <rect x="810" y="530" width="120" height="90" fill="#316da9"/><text class="value" x="870" y="583" text-anchor="middle">0.66</text>
+  <rect x="980" y="530" width="120" height="90" fill="#2f71a4"/><text class="value" x="1040" y="583" text-anchor="middle">0.69</text>
+  <rect x="1150" y="530" width="120" height="90" fill="#3070a6"/><text class="value" x="1210" y="583" text-anchor="middle">0.68</text>
+  <rect x="1320" y="530" width="120" height="90" fill="#277f5c"/><text class="value" x="1380" y="583" text-anchor="middle">0.77</text>
+  <rect x="1490" y="530" width="120" height="90" fill="#21895a"/><text class="value" x="1550" y="583" text-anchor="middle">0.82</text>
+  <rect x="1660" y="530" width="120" height="90" fill="#23855c"/><text class="value" x="1720" y="583" text-anchor="middle">0.80</text>
+
+  <!-- F1 -->
+  <rect x="300" y="650" width="120" height="90" fill="#2f6fa8"/><text class="value" x="360" y="703" text-anchor="middle">0.68</text>
+  <rect x="470" y="650" width="120" height="90" fill="#2a785f"/><text class="value" x="530" y="703" text-anchor="middle">0.73</text>
+  <rect x="640" y="650" width="120" height="90" fill="#2b7563"/><text class="value" x="700" y="703" text-anchor="middle">0.71</text>
+  <rect x="810" y="650" width="120" height="90" fill="#316da9"/><text class="value" x="870" y="703" text-anchor="middle">0.66</text>
+  <rect x="980" y="650" width="120" height="90" fill="#2f71a4"/><text class="value" x="1040" y="703" text-anchor="middle">0.69</text>
+  <rect x="1150" y="650" width="120" height="90" fill="#3070a6"/><text class="value" x="1210" y="703" text-anchor="middle">0.68</text>
+  <rect x="1320" y="650" width="120" height="90" fill="#277f5c"/><text class="value" x="1380" y="703" text-anchor="middle">0.78</text>
+  <rect x="1490" y="650" width="120" height="90" fill="#1f8d55"/><text class="value" x="1550" y="703" text-anchor="middle">0.83</text>
+  <rect x="1660" y="650" width="120" height="90" fill="#22875b"/><text class="value" x="1720" y="703" text-anchor="middle">0.81</text>
+
+  <!-- ROC-AUC -->
+  <rect x="300" y="770" width="120" height="90" fill="#277f5c"/><text class="value" x="360" y="823" text-anchor="middle">0.76</text>
+  <rect x="470" y="770" width="120" height="90" fill="#1e8f53"/><text class="value" x="530" y="823" text-anchor="middle">0.88</text>
+  <rect x="640" y="770" width="120" height="90" fill="#22885a"/><text class="value" x="700" y="823" text-anchor="middle">0.84</text>
+  <rect x="810" y="770" width="120" height="90" fill="#316da9"/><text class="value" x="870" y="823" text-anchor="middle">0.68</text>
+  <rect x="980" y="770" width="120" height="90" fill="#2a785f"/><text class="value" x="1040" y="823" text-anchor="middle">0.74</text>
+  <rect x="1150" y="770" width="120" height="90" fill="#2c7466"/><text class="value" x="1210" y="823" text-anchor="middle">0.71</text>
+  <rect x="1320" y="770" width="120" height="90" fill="#22885a"/><text class="value" x="1380" y="823" text-anchor="middle">0.82</text>
+  <rect x="1490" y="770" width="120" height="90" fill="#1c9450"/><text class="value" x="1550" y="823" text-anchor="middle">0.92</text>
+  <rect x="1660" y="770" width="120" height="90" fill="#1f8d55"/><text class="value" x="1720" y="823" text-anchor="middle">0.89</text>
+
+  <!-- Legend -->
+  <text class="label" x="300" y="930">Lower</text>
+  <rect x="360" y="912" width="420" height="24" fill="url(#grad)"/>
+  <text class="label" x="800" y="930">Higher</text>
+
+  <defs>
+    <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#316da9"/>
+      <stop offset="50%" stop-color="#2c7466"/>
+      <stop offset="100%" stop-color="#1c9450"/>
+    </linearGradient>
+  </defs>
+
+  <text class="caption" x="90" y="1240">Fig 10. Results Summary Heatmap</text>
+  <text class="note" x="1660" y="1240" text-anchor="end">D=Diabetes, H=Heart, CKD=Chronic Kidney Disease</text>
+</svg>

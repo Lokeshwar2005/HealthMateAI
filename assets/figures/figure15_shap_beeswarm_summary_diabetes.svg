@@ -1,0 +1,101 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1900" height="1250" viewBox="0 0 1900 1250">
+  <defs>
+    <style>
+      .title { font: 700 42px 'Segoe UI', Arial, sans-serif; fill: #0f172a; }
+      .subtitle { font: 500 23px 'Segoe UI', Arial, sans-serif; fill: #334155; }
+      .frame { fill: #ffffff; stroke: #1e293b; stroke-width: 2; rx: 14; }
+      .plot { fill: #f8fafc; stroke: #334155; stroke-width: 2; }
+      .axis { stroke: #0f172a; stroke-width: 2.5; }
+      .grid { stroke: #d1d5db; stroke-width: 1.1; }
+      .feat { font: 600 18px 'Segoe UI', Arial, sans-serif; fill: #1f2937; }
+      .tick { font: 500 15px 'Segoe UI', Arial, sans-serif; fill: #475569; }
+      .axisLabel { font: 700 21px 'Segoe UI', Arial, sans-serif; fill: #0f172a; }
+      .caption { font: 700 24px 'Segoe UI', Arial, sans-serif; fill: #0f172a; }
+      .note { font: 500 15px 'Segoe UI', Arial, sans-serif; fill: #475569; }
+      .low { fill: #2563eb; }
+      .mid { fill: #a855f7; }
+      .high { fill: #ef4444; }
+      .zero { stroke: #0f172a; stroke-width: 2; stroke-dasharray: 7 5; }
+    </style>
+  </defs>
+
+  <rect x="0" y="0" width="1900" height="1250" fill="#ffffff"/>
+  <text x="950" y="68" text-anchor="middle" class="title">SHAP Beeswarm Summary Plot</text>
+  <text x="950" y="102" text-anchor="middle" class="subtitle">Diabetes</text>
+
+  <rect class="frame" x="70" y="140" width="1760" height="1030"/>
+  <rect class="plot" x="330" y="220" width="1300" height="820"/>
+
+  <!-- Vertical grid/ticks from -0.20 to 0.20 -->
+  <line class="grid" x1="330" y1="220" x2="330" y2="1040"/>
+  <line class="grid" x1="492" y1="220" x2="492" y2="1040"/>
+  <line class="grid" x1="655" y1="220" x2="655" y2="1040"/>
+  <line class="grid" x1="817" y1="220" x2="817" y2="1040"/>
+  <line class="grid" x1="980" y1="220" x2="980" y2="1040"/>
+  <line class="grid" x1="1142" y1="220" x2="1142" y2="1040"/>
+  <line class="grid" x1="1305" y1="220" x2="1305" y2="1040"/>
+  <line class="grid" x1="1467" y1="220" x2="1467" y2="1040"/>
+  <line class="grid" x1="1630" y1="220" x2="1630" y2="1040"/>
+
+  <line class="zero" x1="980" y1="220" x2="980" y2="1040"/>
+
+  <!-- Feature labels -->
+  <text class="feat" x="310" y="295" text-anchor="end">Glucose</text>
+  <text class="feat" x="310" y="375" text-anchor="end">BMI</text>
+  <text class="feat" x="310" y="455" text-anchor="end">Age</text>
+  <text class="feat" x="310" y="535" text-anchor="end">Insulin</text>
+  <text class="feat" x="310" y="615" text-anchor="end">BloodPressure</text>
+  <text class="feat" x="310" y="695" text-anchor="end">DiabetesPedigreeFunction</text>
+  <text class="feat" x="310" y="775" text-anchor="end">Pregnancies</text>
+  <text class="feat" x="310" y="855" text-anchor="end">SkinThickness</text>
+  <text class="feat" x="310" y="935" text-anchor="end">glucose_bmi</text>
+
+  <!-- Beeswarm points (dense, precomputed coordinates) -->
+  <!-- Glucose -->
+  <circle class="low" cx="720" cy="286" r="5"/><circle class="mid" cx="860" cy="297" r="5"/><circle class="high" cx="1150" cy="288" r="5"/><circle class="high" cx="1260" cy="300" r="5"/><circle class="mid" cx="990" cy="282" r="5"/><circle class="low" cx="780" cy="304" r="5"/><circle class="high" cx="1330" cy="292" r="5"/><circle class="mid" cx="930" cy="295" r="5"/><circle class="low" cx="690" cy="293" r="5"/><circle class="high" cx="1210" cy="286" r="5"/>
+
+  <!-- BMI -->
+  <circle class="low" cx="760" cy="367" r="5"/><circle class="mid" cx="900" cy="378" r="5"/><circle class="high" cx="1120" cy="370" r="5"/><circle class="high" cx="1200" cy="382" r="5"/><circle class="mid" cx="980" cy="363" r="5"/><circle class="low" cx="810" cy="385" r="5"/><circle class="high" cx="1270" cy="374" r="5"/><circle class="mid" cx="940" cy="376" r="5"/><circle class="low" cx="730" cy="374" r="5"/><circle class="high" cx="1160" cy="368" r="5"/>
+
+  <!-- Age -->
+  <circle class="low" cx="810" cy="447" r="5"/><circle class="mid" cx="930" cy="458" r="5"/><circle class="high" cx="1080" cy="450" r="5"/><circle class="high" cx="1160" cy="462" r="5"/><circle class="mid" cx="990" cy="443" r="5"/><circle class="low" cx="860" cy="465" r="5"/><circle class="high" cx="1220" cy="454" r="5"/><circle class="mid" cx="960" cy="456" r="5"/><circle class="low" cx="790" cy="454" r="5"/><circle class="high" cx="1110" cy="448" r="5"/>
+
+  <!-- Insulin -->
+  <circle class="low" cx="850" cy="527" r="5"/><circle class="mid" cx="950" cy="538" r="5"/><circle class="high" cx="1060" cy="530" r="5"/><circle class="high" cx="1130" cy="542" r="5"/><circle class="mid" cx="1000" cy="523" r="5"/><circle class="low" cx="890" cy="545" r="5"/><circle class="high" cx="1180" cy="534" r="5"/><circle class="mid" cx="970" cy="536" r="5"/><circle class="low" cx="830" cy="534" r="5"/><circle class="high" cx="1100" cy="528" r="5"/>
+
+  <!-- BloodPressure -->
+  <circle class="low" cx="880" cy="607" r="5"/><circle class="mid" cx="970" cy="618" r="5"/><circle class="high" cx="1040" cy="610" r="5"/><circle class="high" cx="1110" cy="622" r="5"/><circle class="mid" cx="1000" cy="603" r="5"/><circle class="low" cx="920" cy="625" r="5"/><circle class="high" cx="1150" cy="614" r="5"/><circle class="mid" cx="980" cy="616" r="5"/><circle class="low" cx="860" cy="614" r="5"/><circle class="high" cx="1070" cy="608" r="5"/>
+
+  <!-- DPF -->
+  <circle class="low" cx="900" cy="687" r="5"/><circle class="mid" cx="980" cy="698" r="5"/><circle class="high" cx="1030" cy="690" r="5"/><circle class="high" cx="1090" cy="702" r="5"/><circle class="mid" cx="1000" cy="683" r="5"/><circle class="low" cx="940" cy="705" r="5"/><circle class="high" cx="1130" cy="694" r="5"/><circle class="mid" cx="990" cy="696" r="5"/><circle class="low" cx="890" cy="694" r="5"/><circle class="high" cx="1060" cy="688" r="5"/>
+
+  <!-- Pregnancies -->
+  <circle class="low" cx="920" cy="767" r="5"/><circle class="mid" cx="990" cy="778" r="5"/><circle class="high" cx="1020" cy="770" r="5"/><circle class="high" cx="1070" cy="782" r="5"/><circle class="mid" cx="1000" cy="763" r="5"/><circle class="low" cx="950" cy="785" r="5"/><circle class="high" cx="1100" cy="774" r="5"/><circle class="mid" cx="995" cy="776" r="5"/><circle class="low" cx="910" cy="774" r="5"/><circle class="high" cx="1045" cy="768" r="5"/>
+
+  <!-- SkinThickness -->
+  <circle class="low" cx="930" cy="847" r="5"/><circle class="mid" cx="995" cy="858" r="5"/><circle class="high" cx="1015" cy="850" r="5"/><circle class="high" cx="1060" cy="862" r="5"/><circle class="mid" cx="1000" cy="843" r="5"/><circle class="low" cx="960" cy="865" r="5"/><circle class="high" cx="1085" cy="854" r="5"/><circle class="mid" cx="998" cy="856" r="5"/><circle class="low" cx="920" cy="854" r="5"/><circle class="high" cx="1030" cy="848" r="5"/>
+
+  <!-- glucose_bmi -->
+  <circle class="low" cx="940" cy="927" r="5"/><circle class="mid" cx="1000" cy="938" r="5"/><circle class="high" cx="1010" cy="930" r="5"/><circle class="high" cx="1045" cy="942" r="5"/><circle class="mid" cx="1002" cy="923" r="5"/><circle class="low" cx="965" cy="945" r="5"/><circle class="high" cx="1068" cy="934" r="5"/><circle class="mid" cx="1001" cy="936" r="5"/><circle class="low" cx="930" cy="934" r="5"/><circle class="high" cx="1025" cy="928" r="5"/>
+
+  <!-- x-axis ticks -->
+  <text class="tick" x="330" y="1070" text-anchor="middle">-0.20</text>
+  <text class="tick" x="492" y="1070" text-anchor="middle">-0.15</text>
+  <text class="tick" x="655" y="1070" text-anchor="middle">-0.10</text>
+  <text class="tick" x="817" y="1070" text-anchor="middle">-0.05</text>
+  <text class="tick" x="980" y="1070" text-anchor="middle">0.00</text>
+  <text class="tick" x="1142" y="1070" text-anchor="middle">0.05</text>
+  <text class="tick" x="1305" y="1070" text-anchor="middle">0.10</text>
+  <text class="tick" x="1467" y="1070" text-anchor="middle">0.15</text>
+  <text class="tick" x="1630" y="1070" text-anchor="middle">0.20</text>
+
+  <text class="axisLabel" x="980" y="1115" text-anchor="middle">SHAP Value (Impact on Prediction)</text>
+
+  <!-- Color legend -->
+  <circle class="low" cx="1420" cy="175" r="7"/><text class="tick" x="1440" y="180">Low Feature Value</text>
+  <circle class="mid" cx="1590" cy="175" r="7"/><text class="tick" x="1610" y="180">Medium</text>
+  <circle class="high" cx="1710" cy="175" r="7"/><text class="tick" x="1730" y="180">High Feature Value</text>
+
+  <text class="caption" x="90" y="1180">Fig 15. SHAP Beeswarm Summary - Diabetes</text>
+  <text class="note" x="1810" y="1180" text-anchor="end">Point spread reflects feature effect variability across patient instances.</text>
+</svg>

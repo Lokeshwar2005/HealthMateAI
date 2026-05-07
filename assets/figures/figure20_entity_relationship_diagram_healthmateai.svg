@@ -1,0 +1,132 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2000" height="1300" viewBox="0 0 2000 1300">
+  <defs>
+    <style>
+      .title { font: 700 42px 'Segoe UI', Arial, sans-serif; fill: #0f172a; }
+      .subtitle { font: 500 22px 'Segoe UI', Arial, sans-serif; fill: #334155; }
+      .frame { fill: #ffffff; stroke: #1e293b; stroke-width: 2; rx: 14; }
+      .entity { fill: #eff6ff; stroke: #1d4ed8; stroke-width: 2.2; rx: 12; }
+      .junction { fill: #fff7ed; stroke: #c2410c; stroke-width: 2.2; rx: 12; }
+      .store { fill: #ecfdf5; stroke: #166534; stroke-width: 2.2; rx: 12; }
+      .label { font: 700 19px 'Segoe UI', Arial, sans-serif; fill: #0f172a; }
+      .field { font: 500 14px 'Segoe UI', Arial, sans-serif; fill: #1f2937; }
+      .rel { font: 600 13px 'Segoe UI', Arial, sans-serif; fill: #334155; }
+      .line { stroke: #0f172a; stroke-width: 2.5; fill: none; marker-end: url(#arrow); }
+      .dash { stroke: #475569; stroke-width: 2; stroke-dasharray: 8 7; fill: none; marker-end: url(#arrowSoft); }
+      .caption { font: 700 24px 'Segoe UI', Arial, sans-serif; fill: #0f172a; }
+    </style>
+    <marker id="arrow" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto">
+      <polygon points="0,0 10,4 0,8" fill="#0f172a"/>
+    </marker>
+    <marker id="arrowSoft" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto">
+      <polygon points="0,0 10,4 0,8" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect width="2000" height="1300" fill="#ffffff"/>
+  <text x="1000" y="64" text-anchor="middle" class="title">Entity-Relationship Diagram of HealthMateAI</text>
+  <text x="1000" y="98" text-anchor="middle" class="subtitle">Core Clinical Prediction Data Model</text>
+
+  <rect class="frame" x="60" y="130" width="1880" height="1080"/>
+
+  <!-- User -->
+  <rect class="entity" x="140" y="230" width="340" height="210"/>
+  <text x="310" y="268" text-anchor="middle" class="label">User</text>
+  <text x="160" y="302" class="field">PK user_id</text>
+  <text x="160" y="327" class="field">full_name</text>
+  <text x="160" y="352" class="field">email</text>
+  <text x="160" y="377" class="field">auth_provider</text>
+  <text x="160" y="402" class="field">created_at</text>
+
+  <!-- Profile -->
+  <rect class="entity" x="560" y="230" width="340" height="210"/>
+  <text x="730" y="268" text-anchor="middle" class="label">PatientProfile</text>
+  <text x="580" y="302" class="field">PK profile_id</text>
+  <text x="580" y="327" class="field">FK user_id</text>
+  <text x="580" y="352" class="field">age</text>
+  <text x="580" y="377" class="field">sex</text>
+  <text x="580" y="402" class="field">risk_notes</text>
+
+  <!-- Session -->
+  <rect class="entity" x="980" y="230" width="340" height="210"/>
+  <text x="1150" y="268" text-anchor="middle" class="label">AuthSession</text>
+  <text x="1000" y="302" class="field">PK session_id</text>
+  <text x="1000" y="327" class="field">FK user_id</text>
+  <text x="1000" y="352" class="field">token_hash</text>
+  <text x="1000" y="377" class="field">expires_at</text>
+  <text x="1000" y="402" class="field">is_active</text>
+
+  <!-- PredictionRequest -->
+  <rect class="store" x="350" y="560" width="380" height="240"/>
+  <text x="540" y="598" text-anchor="middle" class="label">PredictionRequest</text>
+  <text x="370" y="632" class="field">PK request_id</text>
+  <text x="370" y="657" class="field">FK user_id</text>
+  <text x="370" y="682" class="field">disease_type</text>
+  <text x="370" y="707" class="field">input_payload_json</text>
+  <text x="370" y="732" class="field">requested_at</text>
+  <text x="370" y="757" class="field">request_status</text>
+
+  <!-- PredictionResult -->
+  <rect class="store" x="800" y="560" width="420" height="240"/>
+  <text x="1010" y="598" text-anchor="middle" class="label">PredictionResult</text>
+  <text x="820" y="632" class="field">PK result_id</text>
+  <text x="820" y="657" class="field">FK request_id</text>
+  <text x="820" y="682" class="field">risk_level</text>
+  <text x="820" y="707" class="field">probability_score</text>
+  <text x="820" y="732" class="field">model_version</text>
+  <text x="820" y="757" class="field">created_at</text>
+
+  <!-- FeatureContribution -->
+  <rect class="junction" x="1290" y="560" width="420" height="240"/>
+  <text x="1500" y="598" text-anchor="middle" class="label">FeatureContribution</text>
+  <text x="1310" y="632" class="field">PK contrib_id</text>
+  <text x="1310" y="657" class="field">FK result_id</text>
+  <text x="1310" y="682" class="field">feature_name</text>
+  <text x="1310" y="707" class="field">shap_value</text>
+  <text x="1310" y="732" class="field">rank_order</text>
+  <text x="1310" y="757" class="field">feature_label</text>
+
+  <!-- Advice -->
+  <rect class="store" x="800" y="900" width="420" height="220"/>
+  <text x="1010" y="938" text-anchor="middle" class="label">ClinicalAdvice</text>
+  <text x="820" y="972" class="field">PK advice_id</text>
+  <text x="820" y="997" class="field">FK result_id</text>
+  <text x="820" y="1022" class="field">advice_text</text>
+  <text x="820" y="1047" class="field">source_model</text>
+  <text x="820" y="1072" class="field">generated_at</text>
+
+  <!-- ModelRegistry -->
+  <rect class="entity" x="1400" y="230" width="380" height="210"/>
+  <text x="1590" y="268" text-anchor="middle" class="label">ModelRegistry</text>
+  <text x="1420" y="302" class="field">PK model_id</text>
+  <text x="1420" y="327" class="field">disease_type</text>
+  <text x="1420" y="352" class="field">algorithm</text>
+  <text x="1420" y="377" class="field">version_tag</text>
+  <text x="1420" y="402" class="field">artifact_path</text>
+
+  <!-- Relationships -->
+  <line class="line" x1="480" y1="320" x2="560" y2="320"/>
+  <text class="rel" x="520" y="305" text-anchor="middle">1 : 1</text>
+
+  <line class="line" x1="380" y1="390" x2="430" y2="560"/>
+  <text class="rel" x="410" y="500">1 : N</text>
+
+  <line class="line" x1="320" y1="440" x2="1080" y2="560"/>
+  <text class="rel" x="700" y="520" text-anchor="middle">requests</text>
+
+  <line class="line" x1="700" y1="680" x2="800" y2="680"/>
+  <text class="rel" x="750" y="665" text-anchor="middle">1 : 1</text>
+
+  <line class="line" x1="1220" y1="680" x2="1290" y2="680"/>
+  <text class="rel" x="1255" y="665" text-anchor="middle">1 : N</text>
+
+  <line class="line" x1="1010" y1="800" x2="1010" y2="900"/>
+  <text class="rel" x="1030" y="850">1 : 1</text>
+
+  <line class="dash" x1="1590" y1="440" x2="1110" y2="560"/>
+  <text class="rel" x="1360" y="520" text-anchor="middle">serves model_version</text>
+
+  <line class="dash" x1="1150" y1="440" x2="1150" y2="560"/>
+  <text class="rel" x="1170" y="505">session context</text>
+
+  <text x="95" y="1245" class="caption">Fig 20. Entity Relationship Diagram</text>
+</svg>

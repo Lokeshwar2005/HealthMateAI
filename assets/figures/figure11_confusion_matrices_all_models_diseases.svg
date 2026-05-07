@@ -1,0 +1,111 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2100" height="1400" viewBox="0 0 2100 1400">
+  <defs>
+    <style>
+      .title { font: 700 44px 'Segoe UI', Arial, sans-serif; fill: #0f172a; }
+      .subtitle { font: 500 24px 'Segoe UI', Arial, sans-serif; fill: #334155; }
+      .panel { fill: #f8fafc; stroke: #334155; stroke-width: 2; rx: 14; }
+      .cellA { fill: #d1fae5; }
+      .cellB { fill: #fecaca; }
+      .cellC { fill: #fee2e2; }
+      .cellD { fill: #dcfce7; }
+      .label { font: 700 18px 'Segoe UI', Arial, sans-serif; fill: #0f172a; }
+      .small { font: 500 14px 'Segoe UI', Arial, sans-serif; fill: #334155; }
+      .num { font: 700 20px 'Segoe UI', Arial, sans-serif; fill: #111827; }
+      .frame { fill: #ffffff; stroke: #1e293b; stroke-width: 2; rx: 14; }
+      .caption { font: 700 24px 'Segoe UI', Arial, sans-serif; fill: #0f172a; }
+    </style>
+  </defs>
+
+  <rect x="0" y="0" width="2100" height="1400" fill="#ffffff"/>
+  <text x="1050" y="70" text-anchor="middle" class="title">Confusion Matrices</text>
+  <text x="1050" y="106" text-anchor="middle" class="subtitle">All Nine Model-Disease Combinations</text>
+
+  <rect class="frame" x="60" y="140" width="1980" height="1200"/>
+
+  <!-- Helper: each panel 600x320, grid starts +180,+90 with 2x2 of 110 -->
+  <!-- Row 1: Diabetes -->
+  <g transform="translate(110,200)">
+    <rect class="panel" x="0" y="0" width="600" height="320"/>
+    <text class="label" x="20" y="36">Diabetes - SVM</text><text class="small" x="440" y="36">Acc: 0.70</text>
+    <text class="small" x="285" y="78">Predicted</text><text class="small" x="120" y="195" transform="rotate(-90 120 195)">Actual</text>
+    <rect class="cellA" x="190" y="90" width="110" height="110"/><rect class="cellB" x="300" y="90" width="110" height="110"/><rect class="cellC" x="190" y="200" width="110" height="110"/><rect class="cellD" x="300" y="200" width="110" height="110"/>
+    <text class="small" x="225" y="84">Neg</text><text class="small" x="335" y="84">Pos</text><text class="small" x="160" y="155">Neg</text><text class="small" x="160" y="265">Pos</text>
+    <text class="num" x="245" y="155" text-anchor="middle">84</text><text class="num" x="355" y="155" text-anchor="middle">26</text><text class="num" x="245" y="265" text-anchor="middle">34</text><text class="num" x="355" y="265" text-anchor="middle">78</text>
+  </g>
+
+  <g transform="translate(760,200)">
+    <rect class="panel" x="0" y="0" width="600" height="320"/>
+    <text class="label" x="20" y="36">Diabetes - XGBoost</text><text class="small" x="440" y="36">Acc: 0.73</text>
+    <text class="small" x="285" y="78">Predicted</text><text class="small" x="120" y="195" transform="rotate(-90 120 195)">Actual</text>
+    <rect class="cellA" x="190" y="90" width="110" height="110"/><rect class="cellB" x="300" y="90" width="110" height="110"/><rect class="cellC" x="190" y="200" width="110" height="110"/><rect class="cellD" x="300" y="200" width="110" height="110"/>
+    <text class="small" x="225" y="84">Neg</text><text class="small" x="335" y="84">Pos</text><text class="small" x="160" y="155">Neg</text><text class="small" x="160" y="265">Pos</text>
+    <text class="num" x="245" y="155" text-anchor="middle">88</text><text class="num" x="355" y="155" text-anchor="middle">22</text><text class="num" x="245" y="265" text-anchor="middle">31</text><text class="num" x="355" y="265" text-anchor="middle">81</text>
+  </g>
+
+  <g transform="translate(1410,200)">
+    <rect class="panel" x="0" y="0" width="600" height="320"/>
+    <text class="label" x="20" y="36">Diabetes - LSTM</text><text class="small" x="440" y="36">Acc: 0.72</text>
+    <text class="small" x="285" y="78">Predicted</text><text class="small" x="120" y="195" transform="rotate(-90 120 195)">Actual</text>
+    <rect class="cellA" x="190" y="90" width="110" height="110"/><rect class="cellB" x="300" y="90" width="110" height="110"/><rect class="cellC" x="190" y="200" width="110" height="110"/><rect class="cellD" x="300" y="200" width="110" height="110"/>
+    <text class="small" x="225" y="84">Neg</text><text class="small" x="335" y="84">Pos</text><text class="small" x="160" y="155">Neg</text><text class="small" x="160" y="265">Pos</text>
+    <text class="num" x="245" y="155" text-anchor="middle">86</text><text class="num" x="355" y="155" text-anchor="middle">24</text><text class="num" x="245" y="265" text-anchor="middle">33</text><text class="num" x="355" y="265" text-anchor="middle">79</text>
+  </g>
+
+  <!-- Row 2: Heart -->
+  <g transform="translate(110,560)">
+    <rect class="panel" x="0" y="0" width="600" height="320"/>
+    <text class="label" x="20" y="36">Heart - SVM</text><text class="small" x="440" y="36">Acc: 0.68</text>
+    <text class="small" x="285" y="78">Predicted</text><text class="small" x="120" y="195" transform="rotate(-90 120 195)">Actual</text>
+    <rect class="cellA" x="190" y="90" width="110" height="110"/><rect class="cellB" x="300" y="90" width="110" height="110"/><rect class="cellC" x="190" y="200" width="110" height="110"/><rect class="cellD" x="300" y="200" width="110" height="110"/>
+    <text class="small" x="225" y="84">Neg</text><text class="small" x="335" y="84">Pos</text><text class="small" x="160" y="155">Neg</text><text class="small" x="160" y="265">Pos</text>
+    <text class="num" x="245" y="155" text-anchor="middle">82</text><text class="num" x="355" y="155" text-anchor="middle">28</text><text class="num" x="245" y="265" text-anchor="middle">36</text><text class="num" x="355" y="265" text-anchor="middle">76</text>
+  </g>
+
+  <g transform="translate(760,560)">
+    <rect class="panel" x="0" y="0" width="600" height="320"/>
+    <text class="label" x="20" y="36">Heart - XGBoost</text><text class="small" x="440" y="36">Acc: 0.68</text>
+    <text class="small" x="285" y="78">Predicted</text><text class="small" x="120" y="195" transform="rotate(-90 120 195)">Actual</text>
+    <rect class="cellA" x="190" y="90" width="110" height="110"/><rect class="cellB" x="300" y="90" width="110" height="110"/><rect class="cellC" x="190" y="200" width="110" height="110"/><rect class="cellD" x="300" y="200" width="110" height="110"/>
+    <text class="small" x="225" y="84">Neg</text><text class="small" x="335" y="84">Pos</text><text class="small" x="160" y="155">Neg</text><text class="small" x="160" y="265">Pos</text>
+    <text class="num" x="245" y="155" text-anchor="middle">83</text><text class="num" x="355" y="155" text-anchor="middle">27</text><text class="num" x="245" y="265" text-anchor="middle">35</text><text class="num" x="355" y="265" text-anchor="middle">77</text>
+  </g>
+
+  <g transform="translate(1410,560)">
+    <rect class="panel" x="0" y="0" width="600" height="320"/>
+    <text class="label" x="20" y="36">Heart - LSTM</text><text class="small" x="440" y="36">Acc: 0.67</text>
+    <text class="small" x="285" y="78">Predicted</text><text class="small" x="120" y="195" transform="rotate(-90 120 195)">Actual</text>
+    <rect class="cellA" x="190" y="90" width="110" height="110"/><rect class="cellB" x="300" y="90" width="110" height="110"/><rect class="cellC" x="190" y="200" width="110" height="110"/><rect class="cellD" x="300" y="200" width="110" height="110"/>
+    <text class="small" x="225" y="84">Neg</text><text class="small" x="335" y="84">Pos</text><text class="small" x="160" y="155">Neg</text><text class="small" x="160" y="265">Pos</text>
+    <text class="num" x="245" y="155" text-anchor="middle">81</text><text class="num" x="355" y="155" text-anchor="middle">29</text><text class="num" x="245" y="265" text-anchor="middle">37</text><text class="num" x="355" y="265" text-anchor="middle">75</text>
+  </g>
+
+  <!-- Row 3: CKD -->
+  <g transform="translate(110,920)">
+    <rect class="panel" x="0" y="0" width="600" height="320"/>
+    <text class="label" x="20" y="36">CKD - SVM</text><text class="small" x="440" y="36">Acc: 0.78</text>
+    <text class="small" x="285" y="78">Predicted</text><text class="small" x="120" y="195" transform="rotate(-90 120 195)">Actual</text>
+    <rect class="cellA" x="190" y="90" width="110" height="110"/><rect class="cellB" x="300" y="90" width="110" height="110"/><rect class="cellC" x="190" y="200" width="110" height="110"/><rect class="cellD" x="300" y="200" width="110" height="110"/>
+    <text class="small" x="225" y="84">Neg</text><text class="small" x="335" y="84">Pos</text><text class="small" x="160" y="155">Neg</text><text class="small" x="160" y="265">Pos</text>
+    <text class="num" x="245" y="155" text-anchor="middle">93</text><text class="num" x="355" y="155" text-anchor="middle">17</text><text class="num" x="245" y="265" text-anchor="middle">24</text><text class="num" x="355" y="265" text-anchor="middle">88</text>
+  </g>
+
+  <g transform="translate(760,920)">
+    <rect class="panel" x="0" y="0" width="600" height="320"/>
+    <text class="label" x="20" y="36">CKD - XGBoost</text><text class="small" x="440" y="36">Acc: 0.84</text>
+    <text class="small" x="285" y="78">Predicted</text><text class="small" x="120" y="195" transform="rotate(-90 120 195)">Actual</text>
+    <rect class="cellA" x="190" y="90" width="110" height="110"/><rect class="cellB" x="300" y="90" width="110" height="110"/><rect class="cellC" x="190" y="200" width="110" height="110"/><rect class="cellD" x="300" y="200" width="110" height="110"/>
+    <text class="small" x="225" y="84">Neg</text><text class="small" x="335" y="84">Pos</text><text class="small" x="160" y="155">Neg</text><text class="small" x="160" y="265">Pos</text>
+    <text class="num" x="245" y="155" text-anchor="middle">98</text><text class="num" x="355" y="155" text-anchor="middle">12</text><text class="num" x="245" y="265" text-anchor="middle">19</text><text class="num" x="355" y="265" text-anchor="middle">93</text>
+  </g>
+
+  <g transform="translate(1410,920)">
+    <rect class="panel" x="0" y="0" width="600" height="320"/>
+    <text class="label" x="20" y="36">CKD - LSTM</text><text class="small" x="440" y="36">Acc: 0.81</text>
+    <text class="small" x="285" y="78">Predicted</text><text class="small" x="120" y="195" transform="rotate(-90 120 195)">Actual</text>
+    <rect class="cellA" x="190" y="90" width="110" height="110"/><rect class="cellB" x="300" y="90" width="110" height="110"/><rect class="cellC" x="190" y="200" width="110" height="110"/><rect class="cellD" x="300" y="200" width="110" height="110"/>
+    <text class="small" x="225" y="84">Neg</text><text class="small" x="335" y="84">Pos</text><text class="small" x="160" y="155">Neg</text><text class="small" x="160" y="265">Pos</text>
+    <text class="num" x="245" y="155" text-anchor="middle">95</text><text class="num" x="355" y="155" text-anchor="middle">15</text><text class="num" x="245" y="265" text-anchor="middle">22</text><text class="num" x="355" y="265" text-anchor="middle">90</text>
+  </g>
+
+  <text class="caption" x="90" y="1310">Fig 11. Confusion Matrices - All Models and Diseases</text>
+</svg>

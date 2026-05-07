@@ -1,0 +1,104 @@
+{
+  "appTitle": "HealthAI",
+  "appSubtitle": "ML-Powered Clinical Assistant",
+  "liveBadge": "LIVE",
+  "logoutLabel": "Logout",
+  "clinician": {
+    "name": "Dr. Smith",
+    "subtitle": "Cardiology • Hospital XYZ",
+    "initials": "DS"
+  },
+  "stats": [
+    {
+      "value": "{patients_analyzed}",
+      "label": "Patients Analyzed",
+      "icon": "trend"
+    },
+    {
+      "value": "{model_accuracy}",
+      "label": "Model Accuracy",
+      "icon": "brain"
+    }
+  ],
+  "welcome": {
+    "title": "Welcome Back",
+    "subtitle": "Explore the ML diagnostic tools"
+  },
+  "servicesTitle": "Diagnostic Services",
+  "services": [
+    {
+      "title": "Heart Disease",
+      "subtitle": "Risk prediction",
+      "icon": "heart"
+    },
+    {
+      "title": "Diabetes",
+      "subtitle": "Risk prediction",
+      "icon": "glucose"
+    },
+    {
+      "title": "CKD",
+      "subtitle": "Risk prediction",
+      "icon": "kidney"
+    },
+    {
+      "title": "RAG Chat",
+      "subtitle": "Evidence-backed answers",
+      "icon": "chat"
+    }
+  ],
+  "predictiveTitle": "Predictive Analytics",
+  "predictiveSubtitle": "ML Model Features",
+  "graph": {
+    "title": "Health Graph",
+    "subtitle": "Real-time ML predictions",
+    "seriesLabel": "{series_label}",
+    "tabs": [
+      {
+        "name": "Heart",
+        "featuresTitle": "ML Model Features",
+        "features": [
+          "{feature_1}",
+          "{feature_2}",
+          "{feature_3}",
+          "{feature_4}"
+        ],
+        "series": [0.24, 0.3, 0.28, 0.35, 0.31, 0.38]
+      },
+      {
+        "name": "Diabetes",
+        "featuresTitle": "ML Model Features",
+        "features": [
+          "{feature_1}",
+          "{feature_2}",
+          "{feature_3}",
+          "{feature_4}"
+        ],
+        "series": [0.2, 0.22, 0.26, 0.3, 0.27, 0.33]
+      },
+      {
+        "name": "CKD",
+        "featuresTitle": "ML Model Features",
+        "features": [
+          "{feature_1}",
+          "{feature_2}",
+          "{feature_3}",
+          "{feature_4}"
+        ],
+        "series": [0.26, 0.3, 0.29, 0.34, 0.33, 0.39]
+      }
+    ]
+  },
+  "rag": {
+    "fabLabel": "AI",
+    "badge": "AI",
+    "sheetTitle": "Disease Awareness Chat",
+    "inputPlaceholder": "Ask about heart disease, diabetes, or CKD",
+    "messages": [
+      {
+        "role": "assistant",
+        "text": "Ask a question and I will answer using trusted sources."
+      }
+    ]
+  }
+}

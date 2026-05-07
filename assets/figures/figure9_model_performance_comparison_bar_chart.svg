@@ -1,0 +1,126 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1900" height="1250" viewBox="0 0 1900 1250">
+  <defs>
+    <style>
+      .title { font: 700 44px 'Segoe UI', Arial, sans-serif; fill: #0f172a; }
+      .subtitle { font: 500 24px 'Segoe UI', Arial, sans-serif; fill: #334155; }
+      .axisLabel { font: 700 24px 'Segoe UI', Arial, sans-serif; fill: #0f172a; }
+      .tick { font: 500 16px 'Segoe UI', Arial, sans-serif; fill: #334155; }
+      .groupLabel { font: 700 20px 'Segoe UI', Arial, sans-serif; fill: #1e293b; }
+      .legendTitle { font: 700 22px 'Segoe UI', Arial, sans-serif; fill: #0f172a; }
+      .legendText { font: 500 18px 'Segoe UI', Arial, sans-serif; fill: #1e293b; }
+      .valueText { font: 700 15px 'Segoe UI', Arial, sans-serif; fill: #0f172a; }
+      .caption { font: 700 24px 'Segoe UI', Arial, sans-serif; fill: #0f172a; }
+      .note { font: 500 15px 'Segoe UI', Arial, sans-serif; fill: #475569; }
+      .frame { fill: #ffffff; stroke: #1e293b; stroke-width: 2; rx: 16; }
+      .plotBg { fill: #f8fafc; stroke: #334155; stroke-width: 2; }
+      .grid { stroke: #cbd5e1; stroke-width: 1.5; }
+      .axis { stroke: #0f172a; stroke-width: 3.5; }
+      .svm { fill: #0ea5e9; }
+      .xgb { fill: #16a34a; }
+      .lstm { fill: #f97316; }
+      .targetLine { stroke: #64748b; stroke-width: 3; stroke-dasharray: 10 8; }
+    </style>
+  </defs>
+
+  <rect x="0" y="0" width="1900" height="1250" fill="#ffffff"/>
+  <text x="950" y="70" text-anchor="middle" class="title">Model Performance Comparison Bar Chart</text>
+  <text x="950" y="106" text-anchor="middle" class="subtitle">All Three Diseases</text>
+
+  <rect class="frame" x="70" y="145" width="1760" height="1030"/>
+
+  <!-- Plot area -->
+  <rect class="plotBg" x="170" y="220" width="1220" height="790"/>
+
+  <!-- Horizontal grid lines for 0.0 to 1.0 -->
+  <line class="grid" x1="170" y1="1010" x2="1390" y2="1010"/>
+  <line class="grid" x1="170" y1="931" x2="1390" y2="931"/>
+  <line class="grid" x1="170" y1="852" x2="1390" y2="852"/>
+  <line class="grid" x1="170" y1="773" x2="1390" y2="773"/>
+  <line class="grid" x1="170" y1="694" x2="1390" y2="694"/>
+  <line class="grid" x1="170" y1="615" x2="1390" y2="615"/>
+  <line class="grid" x1="170" y1="536" x2="1390" y2="536"/>
+  <line class="grid" x1="170" y1="457" x2="1390" y2="457"/>
+  <line class="grid" x1="170" y1="378" x2="1390" y2="378"/>
+  <line class="grid" x1="170" y1="299" x2="1390" y2="299"/>
+  <line class="grid" x1="170" y1="220" x2="1390" y2="220"/>
+
+  <!-- Optional benchmark line at 0.80 -->
+  <line class="targetLine" x1="170" y1="378" x2="1390" y2="378"/>
+  <text x="1405" y="383" class="tick">Benchmark 0.80</text>
+
+  <!-- Axes -->
+  <line class="axis" x1="170" y1="1010" x2="1390" y2="1010"/>
+  <line class="axis" x1="170" y1="1010" x2="170" y2="220"/>
+
+  <!-- Y ticks -->
+  <text class="tick" x="145" y="1015" text-anchor="end">0.0</text>
+  <text class="tick" x="145" y="936" text-anchor="end">0.1</text>
+  <text class="tick" x="145" y="857" text-anchor="end">0.2</text>
+  <text class="tick" x="145" y="778" text-anchor="end">0.3</text>
+  <text class="tick" x="145" y="699" text-anchor="end">0.4</text>
+  <text class="tick" x="145" y="620" text-anchor="end">0.5</text>
+  <text class="tick" x="145" y="541" text-anchor="end">0.6</text>
+  <text class="tick" x="145" y="462" text-anchor="end">0.7</text>
+  <text class="tick" x="145" y="383" text-anchor="end">0.8</text>
+  <text class="tick" x="145" y="304" text-anchor="end">0.9</text>
+  <text class="tick" x="145" y="225" text-anchor="end">1.0</text>
+
+  <!-- Group 1: Diabetes (center x=390) -->
+  <rect class="svm" x="300" y="410.6" width="48" height="599.4"/>
+  <rect class="xgb" x="366" y="314.2" width="48" height="695.8"/>
+  <rect class="lstm" x="432" y="346.8" width="48" height="663.2"/>
+
+  <text class="valueText" x="324" y="402" text-anchor="middle">0.76</text>
+  <text class="valueText" x="390" y="306" text-anchor="middle">0.88</text>
+  <text class="valueText" x="456" y="338" text-anchor="middle">0.84</text>
+
+  <text class="groupLabel" x="390" y="1060" text-anchor="middle">Diabetes</text>
+
+  <!-- Group 2: Heart Disease (center x=780) -->
+  <rect class="svm" x="690" y="473.8" width="48" height="536.2"/>
+  <rect class="xgb" x="756" y="425.6" width="48" height="584.4"/>
+  <rect class="lstm" x="822" y="449.3" width="48" height="560.7"/>
+
+  <text class="valueText" x="714" y="465" text-anchor="middle">0.68</text>
+  <text class="valueText" x="780" y="417" text-anchor="middle">0.74</text>
+  <text class="valueText" x="846" y="441" text-anchor="middle">0.71</text>
+
+  <text class="groupLabel" x="780" y="1060" text-anchor="middle">Heart Disease</text>
+
+  <!-- Group 3: CKD (center x=1170) -->
+  <rect class="svm" x="1080" y="362.8" width="48" height="647.2"/>
+  <rect class="xgb" x="1146" y="283.2" width="48" height="726.8"/>
+  <rect class="lstm" x="1212" y="306.9" width="48" height="703.1"/>
+
+  <text class="valueText" x="1104" y="354" text-anchor="middle">0.82</text>
+  <text class="valueText" x="1170" y="275" text-anchor="middle">0.92</text>
+  <text class="valueText" x="1236" y="299" text-anchor="middle">0.89</text>
+
+  <text class="groupLabel" x="1170" y="1060" text-anchor="middle">Chronic Kidney Disease</text>
+
+  <!-- Axis labels -->
+  <text class="axisLabel" x="780" y="1115" text-anchor="middle">Disease Dataset</text>
+  <g transform="translate(55,615) rotate(-90)">
+    <text class="axisLabel" text-anchor="middle">Performance Score (ROC-AUC)</text>
+  </g>
+
+  <!-- Legend -->
+  <rect x="1450" y="320" width="310" height="310" fill="#f8fafc" stroke="#334155" stroke-width="2" rx="12"/>
+  <text x="1605" y="365" text-anchor="middle" class="legendTitle">Models</text>
+
+  <rect class="svm" x="1485" y="400" width="40" height="24"/>
+  <text x="1545" y="418" class="legendText">SVM</text>
+
+  <rect class="xgb" x="1485" y="455" width="40" height="24"/>
+  <text x="1545" y="473" class="legendText">XGBoost</text>
+
+  <rect class="lstm" x="1485" y="510" width="40" height="24"/>
+  <text x="1545" y="528" class="legendText">LSTM</text>
+
+  <text x="1470" y="575" class="note">Grouped comparison enables</text>
+  <text x="1470" y="597" class="note">cross-disease model selection.</text>
+
+  <!-- Caption -->
+  <text x="95" y="1145" class="caption">Fig 9. Model Performance Comparison Bar Chart</text>
+  <text x="95" y="1172" class="note">Values are displayed on bars for direct interpretation across diseases and models.</text>
+</svg>

@@ -1,0 +1,153 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1900" height="1280" viewBox="0 0 1900 1280">
+  <defs>
+    <style>
+      .title { font: 700 44px 'Segoe UI', Arial, sans-serif; fill: #0f172a; }
+      .subtitle { font: 500 24px 'Segoe UI', Arial, sans-serif; fill: #334155; }
+      .section { font: 700 25px 'Segoe UI', Arial, sans-serif; fill: #0f172a; }
+      .nodeTitle { font: 700 21px 'Segoe UI', Arial, sans-serif; fill: #0f172a; }
+      .nodeText { font: 400 17px 'Segoe UI', Arial, sans-serif; fill: #1e293b; }
+      .small { font: 500 15px 'Segoe UI', Arial, sans-serif; fill: #334155; }
+      .frame { fill: #f8fafc; stroke: #1e293b; stroke-width: 2; rx: 18; }
+      .client { fill: #ecfeff; stroke: #0e7490; stroke-width: 2.5; rx: 14; }
+      .api { fill: #eff6ff; stroke: #1d4ed8; stroke-width: 2.5; rx: 14; }
+      .logic { fill: #fff7ed; stroke: #c2410c; stroke-width: 2.5; rx: 14; }
+      .data { fill: #ecfdf5; stroke: #15803d; stroke-width: 2.5; rx: 14; }
+      .external { fill: #faf5ff; stroke: #7e22ce; stroke-width: 2.5; rx: 14; }
+      .decision { fill: #ffffff; stroke: #475569; stroke-width: 2.5; }
+      .arrow { stroke: #0f172a; stroke-width: 3; fill: none; marker-end: url(#arrow); }
+      .soft { stroke: #475569; stroke-width: 2.5; fill: none; marker-end: url(#arrowSoft); }
+      .dash { stroke: #475569; stroke-width: 2.5; fill: none; marker-end: url(#arrowSoft); stroke-dasharray: 8 8; }
+      .chip { fill: #ffffff; stroke: #94a3b8; stroke-width: 1.5; rx: 10; }
+      .step { font: 700 15px 'Segoe UI', Arial, sans-serif; fill: #0f172a; }
+    </style>
+    <marker id="arrow" markerWidth="12" markerHeight="9" refX="10" refY="4.5" orient="auto">
+      <polygon points="0 0, 12 4.5, 0 9" fill="#0f172a" />
+    </marker>
+    <marker id="arrowSoft" markerWidth="12" markerHeight="9" refX="10" refY="4.5" orient="auto">
+      <polygon points="0 0, 12 4.5, 0 9" fill="#475569" />
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1900" height="1280" fill="#ffffff"/>
+  <text x="950" y="70" text-anchor="middle" class="title">Flask REST API Backend Architecture</text>
+  <text x="950" y="106" text-anchor="middle" class="subtitle">Request/Response Pipeline</text>
+
+  <rect class="frame" x="60" y="145" width="1780" height="1070"/>
+  <text x="90" y="186" class="section">Figure 4: HealthMateAI Flask Backend Processing Flow</text>
+
+  <!-- Left input lane -->
+  <rect class="client" x="120" y="250" width="360" height="110"/>
+  <text x="300" y="293" text-anchor="middle" class="nodeTitle">Android Client Request</text>
+  <text x="300" y="322" text-anchor="middle" class="nodeText">POST /predict with disease + inputs</text>
+
+  <rect class="api" x="560" y="245" width="460" height="120"/>
+  <text x="790" y="292" text-anchor="middle" class="nodeTitle">Flask Route Handler</text>
+  <text x="790" y="321" text-anchor="middle" class="nodeText">request.get_json(force=true)</text>
+  <text x="790" y="346" text-anchor="middle" class="small">Parse disease and input_data</text>
+
+  <polygon class="decision" points="1170,305 1285,240 1400,305 1285,370"/>
+  <text x="1285" y="296" text-anchor="middle" class="nodeTitle">Disease Type</text>
+  <text x="1285" y="322" text-anchor="middle" class="small">diabetes / heart ?</text>
+
+  <rect class="logic" x="1470" y="250" width="300" height="110"/>
+  <text x="1620" y="295" text-anchor="middle" class="nodeTitle">Validation Error</text>
+  <text x="1620" y="324" text-anchor="middle" class="nodeText">Invalid disease - HTTP 400</text>
+
+  <line class="arrow" x1="480" y1="305" x2="560" y2="305"/>
+  <line class="arrow" x1="1020" y1="305" x2="1170" y2="305"/>
+  <line class="arrow" x1="1400" y1="305" x2="1470" y2="305"/>
+  <text x="1422" y="286" class="small">No</text>
+
+  <!-- Model selection and preprocessing -->
+  <rect class="data" x="560" y="430" width="520" height="130"/>
+  <text x="820" y="478" text-anchor="middle" class="nodeTitle">Model and Feature Selection</text>
+  <text x="820" y="507" text-anchor="middle" class="nodeText">Load DIABETES_MODEL or HEART_MODEL</text>
+  <text x="820" y="534" text-anchor="middle" class="small">Select corresponding feature list</text>
+
+  <rect class="logic" x="1140" y="430" width="560" height="130"/>
+  <text x="1420" y="478" text-anchor="middle" class="nodeTitle">prepare_input_frame()</text>
+  <text x="1420" y="507" text-anchor="middle" class="nodeText">Numeric casting, defaults, engineered features</text>
+  <text x="1420" y="534" text-anchor="middle" class="small">Reindex to model features and fill missing values</text>
+
+  <line class="arrow" x1="1285" y1="370" x2="1285" y2="430"/>
+  <text x="1305" y="400" class="small">Yes</text>
+  <line class="arrow" x1="1080" y1="495" x2="1140" y2="495"/>
+
+  <!-- Inference and risk logic -->
+  <rect class="api" x="210" y="640" width="470" height="130"/>
+  <text x="445" y="688" text-anchor="middle" class="nodeTitle">Inference Engine</text>
+  <text x="445" y="717" text-anchor="middle" class="nodeText">model.predict_proba(df) - class probability</text>
+  <text x="445" y="744" text-anchor="middle" class="small">build_risk_level(probability)</text>
+
+  <rect class="logic" x="740" y="640" width="500" height="130"/>
+  <text x="990" y="688" text-anchor="middle" class="nodeTitle">Clinical Rule Override</text>
+  <text x="990" y="717" text-anchor="middle" class="nodeText">For diabetes: glucose threshold adjustments</text>
+  <text x="990" y="744" text-anchor="middle" class="small">High if glucose >= 160, Medium guard at 130</text>
+
+  <rect class="data" x="1300" y="640" width="450" height="130"/>
+  <text x="1525" y="688" text-anchor="middle" class="nodeTitle">SHAP Explainability</text>
+  <text x="1525" y="717" text-anchor="middle" class="nodeText">TreeExplainer + top 5 feature contributions</text>
+  <text x="1525" y="744" text-anchor="middle" class="small">Map raw features to readable factors</text>
+
+  <line class="arrow" x1="1420" y1="560" x2="1420" y2="640"/>
+  <line class="arrow" x1="1420" y1="640" x2="1240" y2="705"/>
+  <line class="arrow" x1="1420" y1="640" x2="1300" y2="705"/>
+
+  <!-- LLM advisory generation -->
+  <rect class="external" x="430" y="845" width="530" height="145"/>
+  <text x="695" y="896" text-anchor="middle" class="nodeTitle">Prompt Builder</text>
+  <text x="695" y="925" text-anchor="middle" class="nodeText">Risk level + top factors -> concise medical advice prompt</text>
+  <text x="695" y="952" text-anchor="middle" class="small">Template for external language model call</text>
+
+  <rect class="external" x="1030" y="845" width="580" height="145"/>
+  <text x="1320" y="896" text-anchor="middle" class="nodeTitle">Gemini API Call</text>
+  <text x="1320" y="925" text-anchor="middle" class="nodeText">requests.post(generateContent, timeout=20)</text>
+  <text x="1320" y="952" text-anchor="middle" class="small">Use candidate text on success, fallback on error</text>
+
+  <line class="arrow" x1="445" y1="770" x2="630" y2="845"/>
+  <line class="arrow" x1="990" y1="770" x2="760" y2="845"/>
+  <line class="arrow" x1="1525" y1="770" x2="760" y2="845"/>
+  <line class="arrow" x1="960" y1="917" x2="1030" y2="917"/>
+
+  <!-- Final response -->
+  <rect class="api" x="620" y="1045" width="700" height="130"/>
+  <text x="970" y="1092" text-anchor="middle" class="nodeTitle">JSON Response Serializer</text>
+  <text x="970" y="1121" text-anchor="middle" class="nodeText">{ risk, probability, factors, advice }</text>
+  <text x="970" y="1148" text-anchor="middle" class="small">Return HTTP 200 to Android client</text>
+
+  <line class="arrow" x1="1320" y1="990" x2="1320" y2="1110"/>
+  <line class="arrow" x1="1030" y1="1110" x2="1320" y2="1110"/>
+  <line class="dash" x1="620" y1="1110" x2="340" y2="1110"/>
+  <line class="dash" x1="340" y1="1110" x2="340" y2="360"/>
+  <text x="170" y="1088" class="small">Response returned to requester</text>
+
+  <!-- Artifacts and stores -->
+  <rect class="data" x="120" y="430" width="380" height="130"/>
+  <text x="310" y="478" text-anchor="middle" class="nodeTitle">Model Artifacts</text>
+  <text x="310" y="507" text-anchor="middle" class="nodeText">.pkl models, features, thresholds</text>
+  <text x="310" y="534" text-anchor="middle" class="small">Loaded once at startup</text>
+
+  <line class="soft" x1="500" y1="495" x2="560" y2="495"/>
+
+  <!-- Step markers -->
+  <rect class="chip" x="514" y="287" width="32" height="26"/>
+  <text x="530" y="305" text-anchor="middle" class="step">1</text>
+
+  <rect class="chip" x="1082" y="287" width="32" height="26"/>
+  <text x="1098" y="305" text-anchor="middle" class="step">2</text>
+
+  <rect class="chip" x="1090" y="478" width="32" height="26"/>
+  <text x="1106" y="496" text-anchor="middle" class="step">3</text>
+
+  <rect class="chip" x="690" y="688" width="32" height="26"/>
+  <text x="706" y="706" text-anchor="middle" class="step">4</text>
+
+  <rect class="chip" x="1250" y="688" width="32" height="26"/>
+  <text x="1266" y="706" text-anchor="middle" class="step">5</text>
+
+  <rect class="chip" x="995" y="903" width="32" height="26"/>
+  <text x="1011" y="921" text-anchor="middle" class="step">6</text>
+
+  <rect class="chip" x="1330" y="1098" width="32" height="26"/>
+  <text x="1346" y="1116" text-anchor="middle" class="step">7</text>
+</svg>

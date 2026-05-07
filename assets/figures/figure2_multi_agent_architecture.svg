@@ -1,0 +1,126 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1200" viewBox="0 0 1800 1200">
+  <defs>
+    <style>
+      .title { font: 700 44px 'Segoe UI', Arial, sans-serif; fill: #0f172a; }
+      .subtitle { font: 500 24px 'Segoe UI', Arial, sans-serif; fill: #334155; }
+      .section { font: 700 26px 'Segoe UI', Arial, sans-serif; fill: #0f172a; }
+      .agentTitle { font: 700 22px 'Segoe UI', Arial, sans-serif; fill: #0f172a; }
+      .agentText { font: 400 18px 'Segoe UI', Arial, sans-serif; fill: #1e293b; }
+      .noteText { font: 500 16px 'Segoe UI', Arial, sans-serif; fill: #334155; }
+      .frame { fill: #f8fafc; stroke: #1e293b; stroke-width: 2; rx: 18; }
+      .orchestrator { fill: #fff7ed; stroke: #c2410c; stroke-width: 3; rx: 16; }
+      .agentA { fill: #ecfeff; stroke: #155e75; stroke-width: 2; rx: 14; }
+      .agentB { fill: #eff6ff; stroke: #1d4ed8; stroke-width: 2; rx: 14; }
+      .agentC { fill: #ecfdf5; stroke: #166534; stroke-width: 2; rx: 14; }
+      .agentD { fill: #faf5ff; stroke: #7e22ce; stroke-width: 2; rx: 14; }
+      .store { fill: #f1f5f9; stroke: #334155; stroke-width: 2; rx: 12; }
+      .edge { stroke: #0f172a; stroke-width: 3; fill: none; marker-end: url(#arrow); }
+      .edgeBack { stroke: #475569; stroke-width: 2.5; fill: none; marker-end: url(#arrowSoft); }
+      .dashed { stroke: #475569; stroke-width: 2.5; stroke-dasharray: 8 8; fill: none; marker-end: url(#arrowSoft); }
+      .step { font: 700 16px 'Segoe UI', Arial, sans-serif; fill: #0f172a; }
+      .chip { fill: #ffffff; stroke: #94a3b8; stroke-width: 1.5; rx: 10; }
+    </style>
+    <marker id="arrow" markerWidth="12" markerHeight="9" refX="10" refY="4.5" orient="auto">
+      <polygon points="0 0, 12 4.5, 0 9" fill="#0f172a" />
+    </marker>
+    <marker id="arrowSoft" markerWidth="12" markerHeight="9" refX="10" refY="4.5" orient="auto">
+      <polygon points="0 0, 12 4.5, 0 9" fill="#475569" />
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1800" height="1200" fill="#ffffff"/>
+  <text x="900" y="70" text-anchor="middle" class="title">Multi-Agent Architecture</text>
+  <text x="900" y="108" text-anchor="middle" class="subtitle">Five Agent Roles and Coordination Flow</text>
+
+  <rect class="frame" x="60" y="145" width="1680" height="990"/>
+  <text x="90" y="185" class="section">Figure 2: HealthMateAI Multi-Agent Coordination</text>
+
+  <!-- User -->
+  <rect class="agentA" x="120" y="260" width="320" height="120"/>
+  <text x="280" y="305" text-anchor="middle" class="agentTitle">Agent 1: UI Agent</text>
+  <text x="280" y="334" text-anchor="middle" class="agentText">Collect symptoms and vitals</text>
+  <text x="280" y="358" text-anchor="middle" class="agentText">Display prediction and advice</text>
+
+  <!-- Orchestrator -->
+  <rect class="orchestrator" x="650" y="240" width="500" height="160"/>
+  <text x="900" y="295" text-anchor="middle" class="agentTitle">Agent 2: Orchestrator Agent</text>
+  <text x="900" y="326" text-anchor="middle" class="agentText">Task routing, policy checks, and workflow control</text>
+  <text x="900" y="353" text-anchor="middle" class="agentText">Coordinates all specialist agents</text>
+
+  <!-- Specialist agents row -->
+  <rect class="agentB" x="140" y="520" width="460" height="150"/>
+  <text x="370" y="575" text-anchor="middle" class="agentTitle">Agent 3: Data Retrieval Agent</text>
+  <text x="370" y="606" text-anchor="middle" class="agentText">Fetch patient profile and context</text>
+  <text x="370" y="632" text-anchor="middle" class="agentText">Normalize input payload for inference</text>
+
+  <rect class="agentC" x="670" y="520" width="460" height="150"/>
+  <text x="900" y="575" text-anchor="middle" class="agentTitle">Agent 4: ML Inference Agent</text>
+  <text x="900" y="606" text-anchor="middle" class="agentText">Run diabetes and heart risk models</text>
+  <text x="900" y="632" text-anchor="middle" class="agentText">Return probability and risk category</text>
+
+  <rect class="agentD" x="1200" y="520" width="460" height="150"/>
+  <text x="1430" y="575" text-anchor="middle" class="agentTitle">Agent 5: Advice Synthesis Agent</text>
+  <text x="1430" y="606" text-anchor="middle" class="agentText">Summarize SHAP factors and rule outputs</text>
+  <text x="1430" y="632" text-anchor="middle" class="agentText">Generate actionable guidance text</text>
+
+  <!-- Shared stores -->
+  <rect class="store" x="230" y="790" width="540" height="150"/>
+  <text x="500" y="845" text-anchor="middle" class="agentTitle">Shared Clinical Data Store</text>
+  <text x="500" y="874" text-anchor="middle" class="agentText">Vitals, demographics, historical context</text>
+  <text x="500" y="900" text-anchor="middle" class="agentText">Feature dictionary and validation schema</text>
+
+  <rect class="store" x="1030" y="790" width="540" height="150"/>
+  <text x="1300" y="845" text-anchor="middle" class="agentTitle">Model and Prompt Asset Store</text>
+  <text x="1300" y="874" text-anchor="middle" class="agentText">Serialized models, thresholds, prompt templates</text>
+  <text x="1300" y="900" text-anchor="middle" class="agentText">Guideline snippets and response format policy</text>
+
+  <!-- Main coordination flow -->
+  <line class="edge" x1="440" y1="320" x2="650" y2="320"/>
+  <line class="edge" x1="900" y1="400" x2="370" y2="520"/>
+  <line class="edge" x1="900" y1="400" x2="900" y2="520"/>
+  <line class="edge" x1="900" y1="400" x2="1430" y2="520"/>
+
+  <line class="edge" x1="600" y1="595" x2="670" y2="595"/>
+  <line class="edge" x1="1130" y1="595" x2="1200" y2="595"/>
+
+  <line class="edge" x1="1430" y1="520" x2="1430" y2="420"/>
+  <line class="edge" x1="1430" y1="420" x2="1150" y2="320"/>
+
+  <line class="edge" x1="650" y1="320" x2="440" y2="320"/>
+
+  <!-- Data and asset interactions -->
+  <line class="dashed" x1="370" y1="670" x2="500" y2="790"/>
+  <line class="dashed" x1="900" y1="670" x2="500" y2="790"/>
+  <line class="dashed" x1="900" y1="670" x2="1300" y2="790"/>
+  <line class="dashed" x1="1430" y1="670" x2="1300" y2="790"/>
+
+  <line class="edgeBack" x1="500" y1="790" x2="370" y2="670"/>
+  <line class="edgeBack" x1="1300" y1="790" x2="900" y2="670"/>
+
+  <!-- Step markers -->
+  <rect class="chip" x="520" y="284" width="34" height="28"/>
+  <text x="537" y="303" text-anchor="middle" class="step">1</text>
+
+  <rect class="chip" x="700" y="435" width="34" height="28"/>
+  <text x="717" y="454" text-anchor="middle" class="step">2</text>
+
+  <rect class="chip" x="865" y="455" width="34" height="28"/>
+  <text x="882" y="474" text-anchor="middle" class="step">3</text>
+
+  <rect class="chip" x="1030" y="435" width="34" height="28"/>
+  <text x="1047" y="454" text-anchor="middle" class="step">4</text>
+
+  <rect class="chip" x="1305" y="470" width="34" height="28"/>
+  <text x="1322" y="489" text-anchor="middle" class="step">5</text>
+
+  <rect class="chip" x="1215" y="360" width="34" height="28"/>
+  <text x="1232" y="379" text-anchor="middle" class="step">6</text>
+
+  <!-- Legend -->
+  <rect class="store" x="120" y="980" width="1540" height="110"/>
+  <text x="150" y="1022" class="agentTitle">Coordination Flow</text>
+  <text x="150" y="1052" class="noteText">1. UI Agent sends request to Orchestrator.</text>
+  <text x="580" y="1052" class="noteText">2-4. Orchestrator dispatches tasks to Data, ML, and Advice agents.</text>
+  <text x="1210" y="1052" class="noteText">5-6. Advice returns to Orchestrator, then back to UI.</text>
+  <text x="150" y="1078" class="noteText">Dashed edges indicate shared read/write access to clinical data and model assets.</text>
+</svg>

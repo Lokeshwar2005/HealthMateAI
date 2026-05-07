@@ -1,0 +1,44 @@
+{
+  "shared": {
+    "appTitle": "HealthAI",
+    "appSubtitle": "ML-Powered Clinical Assistant",
+    "badgeLive": "LIVE"
+  },
+  "login": {
+    "title": "Welcome Back",
+    "subtitle": "Access ML-powered diagnostics",
+    "emailLabel": "Email Address",
+    "passwordLabel": "Password",
+    "forgotLabel": "Forgot password?",
+    "ctaLabel": "Sign In",
+    "dividerLabel": "OR",
+    "googleLabel": "Continue with Google",
+    "signupPrompt": "Don't have an account?",
+    "signupLink": "Create one",
+    "termsText": "I agree to the Terms and Privacy Policy",
+    "heroBadge": "SECURE",
+    "icon": "lock"
+  },
+  "signup": {
+    "title": "Create Account",
+    "subtitle": "Join the clinical AI workspace",
+    "nameLabel": "Full Name",
+    "emailLabel": "Email Address",
+    "passwordLabel": "Password",
+    "confirmLabel": "Confirm Password",
+    "ctaLabel": "Create Account",
+    "dividerLabel": "OR",
+    "loginPrompt": "Already have an account?",
+    "loginLink": "Sign in",
+    "termsText": "I agree to the Terms and Privacy Policy",
+    "heroBadge": "ONBOARD",
+    "icon": "user"
+  },
+  "validation": {
+    "passwordMismatch": "Passwords do not match",
+    "passwordMatch": "Passwords match"
+  },
+  "errors": {
+    "googleInit": "Google Sign-In is not initialized yet."
+  }
+}

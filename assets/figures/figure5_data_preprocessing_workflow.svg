@@ -1,0 +1,160 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1900" height="1280" viewBox="0 0 1900 1280">
+  <defs>
+    <style>
+      .title { font: 700 44px 'Segoe UI', Arial, sans-serif; fill: #0f172a; }
+      .subtitle { font: 500 24px 'Segoe UI', Arial, sans-serif; fill: #334155; }
+      .section { font: 700 24px 'Segoe UI', Arial, sans-serif; fill: #0f172a; }
+      .nodeTitle { font: 700 20px 'Segoe UI', Arial, sans-serif; fill: #0f172a; }
+      .nodeText { font: 400 17px 'Segoe UI', Arial, sans-serif; fill: #1e293b; }
+      .small { font: 500 15px 'Segoe UI', Arial, sans-serif; fill: #334155; }
+
+      .frame { fill: #f8fafc; stroke: #1e293b; stroke-width: 2; rx: 18; }
+      .shared { fill: #ecfeff; stroke: #0e7490; stroke-width: 2.5; rx: 14; }
+      .decision { fill: #ffffff; stroke: #475569; stroke-width: 2.5; }
+      .diabetes { fill: #eff6ff; stroke: #1d4ed8; stroke-width: 2.5; rx: 14; }
+      .heart { fill: #fff7ed; stroke: #c2410c; stroke-width: 2.5; rx: 14; }
+      .final { fill: #ecfdf5; stroke: #15803d; stroke-width: 2.5; rx: 14; }
+      .store { fill: #faf5ff; stroke: #7e22ce; stroke-width: 2.5; rx: 14; }
+
+      .arrow { stroke: #0f172a; stroke-width: 3; fill: none; marker-end: url(#arrow); }
+      .softArrow { stroke: #475569; stroke-width: 2.5; fill: none; marker-end: url(#arrowSoft); }
+      .dashArrow { stroke: #475569; stroke-width: 2.5; fill: none; marker-end: url(#arrowSoft); stroke-dasharray: 8 8; }
+
+      .chip { fill: #ffffff; stroke: #94a3b8; stroke-width: 1.5; rx: 10; }
+      .step { font: 700 15px 'Segoe UI', Arial, sans-serif; fill: #0f172a; }
+    </style>
+    <marker id="arrow" markerWidth="12" markerHeight="9" refX="10" refY="4.5" orient="auto">
+      <polygon points="0 0, 12 4.5, 0 9" fill="#0f172a" />
+    </marker>
+    <marker id="arrowSoft" markerWidth="12" markerHeight="9" refX="10" refY="4.5" orient="auto">
+      <polygon points="0 0, 12 4.5, 0 9" fill="#475569" />
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1900" height="1280" fill="#ffffff"/>
+  <text x="950" y="70" text-anchor="middle" class="title">Data Preprocessing Workflow</text>
+  <text x="950" y="106" text-anchor="middle" class="subtitle">Disease-Specific Pipelines</text>
+
+  <rect class="frame" x="60" y="145" width="1780" height="1065"/>
+  <text x="90" y="185" class="section">Figure 5: HealthMateAI Preprocessing Logic from Raw Inputs to Inference-Ready Features</text>
+
+  <!-- Shared top pipeline -->
+  <rect class="shared" x="170" y="250" width="420" height="115"/>
+  <text x="380" y="296" text-anchor="middle" class="nodeTitle">Raw JSON Input</text>
+  <text x="380" y="325" text-anchor="middle" class="nodeText">disease + inputs dictionary</text>
+  <text x="380" y="349" text-anchor="middle" class="small">Single-row payload from API request</text>
+
+  <rect class="shared" x="700" y="250" width="500" height="115"/>
+  <text x="950" y="296" text-anchor="middle" class="nodeTitle">Create Initial DataFrame</text>
+  <text x="950" y="325" text-anchor="middle" class="nodeText">pd.DataFrame([input_data])</text>
+  <text x="950" y="349" text-anchor="middle" class="small">One sample per prediction request</text>
+
+  <rect class="shared" x="1310" y="250" width="430" height="115"/>
+  <text x="1525" y="296" text-anchor="middle" class="nodeTitle">Numeric Coercion</text>
+  <text x="1525" y="325" text-anchor="middle" class="nodeText">pd.to_numeric(errors='coerce')</text>
+  <text x="1525" y="349" text-anchor="middle" class="small">Invalid values converted to NaN</text>
+
+  <line class="arrow" x1="590" y1="307" x2="700" y2="307"/>
+  <line class="arrow" x1="1200" y1="307" x2="1310" y2="307"/>
+
+  <!-- Decision -->
+  <polygon class="decision" points="860,500 950,440 1040,500 950,560"/>
+  <text x="950" y="493" text-anchor="middle" class="nodeTitle">Disease?</text>
+  <text x="950" y="517" text-anchor="middle" class="small">diabetes or heart</text>
+
+  <line class="arrow" x1="1525" y1="365" x2="1525" y2="430"/>
+  <line class="arrow" x1="1525" y1="430" x2="950" y2="430"/>
+  <line class="arrow" x1="950" y1="430" x2="950" y2="440"/>
+
+  <!-- Diabetes branch -->
+  <rect class="diabetes" x="140" y="620" width="520" height="125"/>
+  <text x="400" y="668" text-anchor="middle" class="nodeTitle">Diabetes Pipeline</text>
+  <text x="400" y="697" text-anchor="middle" class="nodeText">No disease-specific defaults added</text>
+  <text x="400" y="721" text-anchor="middle" class="small">Use provided fields as-is after numeric conversion</text>
+
+  <rect class="diabetes" x="140" y="790" width="520" height="125"/>
+  <text x="400" y="838" text-anchor="middle" class="nodeTitle">Column Alignment (Diabetes)</text>
+  <text x="400" y="867" text-anchor="middle" class="nodeText">reindex(columns=DIABETES_FEATURES, fill_value=0)</text>
+  <text x="400" y="891" text-anchor="middle" class="small">Guarantees exact model feature order</text>
+
+  <!-- Heart branch -->
+  <rect class="heart" x="760" y="620" width="600" height="125"/>
+  <text x="1060" y="668" text-anchor="middle" class="nodeTitle">Heart Defaults Injection</text>
+  <text x="1060" y="697" text-anchor="middle" class="nodeText">anaemia, diabetes, high_blood_pressure, sex, smoking, platelets</text>
+  <text x="1060" y="721" text-anchor="middle" class="small">Only added when missing from incoming payload</text>
+
+  <rect class="heart" x="760" y="790" width="600" height="125"/>
+  <text x="1060" y="838" text-anchor="middle" class="nodeTitle">Heart Feature Engineering</text>
+  <text x="1060" y="867" text-anchor="middle" class="nodeText">bp_dummy and creatinine_sodium_ratio (if inputs exist)</text>
+  <text x="1060" y="891" text-anchor="middle" class="small">Domain-specific enrichment before model scoring</text>
+
+  <rect class="heart" x="760" y="960" width="600" height="125"/>
+  <text x="1060" y="1008" text-anchor="middle" class="nodeTitle">Column Alignment (Heart)</text>
+  <text x="1060" y="1037" text-anchor="middle" class="nodeText">reindex(columns=HEART_FEATURES, fill_value=0)</text>
+  <text x="1060" y="1061" text-anchor="middle" class="small">Produces exact feature matrix for heart model</text>
+
+  <!-- Shared finalize -->
+  <rect class="final" x="1460" y="700" width="300" height="125"/>
+  <text x="1610" y="748" text-anchor="middle" class="nodeTitle">Missing Value Fill</text>
+  <text x="1610" y="777" text-anchor="middle" class="nodeText">df.fillna(0)</text>
+  <text x="1610" y="801" text-anchor="middle" class="small">Stable numeric tensor for inference</text>
+
+  <rect class="final" x="1460" y="900" width="300" height="125"/>
+  <text x="1610" y="948" text-anchor="middle" class="nodeTitle">Prepared DataFrame</text>
+  <text x="1610" y="977" text-anchor="middle" class="nodeText">Return from prepare_input_frame()</text>
+  <text x="1610" y="1001" text-anchor="middle" class="small">Consumed by model.predict_proba()</text>
+
+  <!-- Data store annotation -->
+  <rect class="store" x="1460" y="250" width="300" height="125"/>
+  <text x="1610" y="298" text-anchor="middle" class="nodeTitle">Feature Schemas</text>
+  <text x="1610" y="327" text-anchor="middle" class="nodeText">DIABETES_FEATURES</text>
+  <text x="1610" y="351" text-anchor="middle" class="nodeText">HEART_FEATURES</text>
+
+  <!-- Branch arrows -->
+  <line class="arrow" x1="880" y1="560" x2="480" y2="620"/>
+  <text x="620" y="582" class="small">diabetes</text>
+
+  <line class="arrow" x1="1020" y1="560" x2="980" y2="620"/>
+  <text x="1040" y="590" class="small">heart</text>
+
+  <line class="arrow" x1="400" y1="745" x2="400" y2="790"/>
+  <line class="softArrow" x1="1360" y1="307" x2="1460" y2="307"/>
+  <line class="dashArrow" x1="1660" y1="375" x2="1660" y2="700"/>
+
+  <line class="arrow" x1="1360" y1="852" x2="1460" y2="760"/>
+  <line class="arrow" x1="660" y1="852" x2="1460" y2="760"/>
+
+  <line class="arrow" x1="1060" y1="915" x2="1060" y2="960"/>
+  <line class="arrow" x1="1360" y1="1022" x2="1460" y2="962"/>
+
+  <line class="arrow" x1="1610" y1="825" x2="1610" y2="900"/>
+
+  <!-- Step markers -->
+  <rect class="chip" x="645" y="292" width="32" height="26"/>
+  <text x="661" y="310" text-anchor="middle" class="step">1</text>
+
+  <rect class="chip" x="1255" y="292" width="32" height="26"/>
+  <text x="1271" y="310" text-anchor="middle" class="step">2</text>
+
+  <rect class="chip" x="918" y="404" width="32" height="26"/>
+  <text x="934" y="422" text-anchor="middle" class="step">3</text>
+
+  <rect class="chip" x="620" y="650" width="32" height="26"/>
+  <text x="636" y="668" text-anchor="middle" class="step">4a</text>
+
+  <rect class="chip" x="1368" y="650" width="32" height="26"/>
+  <text x="1384" y="668" text-anchor="middle" class="step">4b</text>
+
+  <rect class="chip" x="1368" y="820" width="32" height="26"/>
+  <text x="1384" y="838" text-anchor="middle" class="step">5</text>
+
+  <rect class="chip" x="1770" y="742" width="32" height="26"/>
+  <text x="1786" y="760" text-anchor="middle" class="step">6</text>
+
+  <rect class="chip" x="1770" y="942" width="32" height="26"/>
+  <text x="1786" y="960" text-anchor="middle" class="step">7</text>
+
+  <!-- Caption -->
+  <text x="90" y="1160" class="nodeTitle">Fig 5. Data Preprocessing Workflow</text>
+  <text x="90" y="1188" class="nodeText">Both pipelines share ingestion and numeric coercion, then diverge by disease-specific logic before converging into a clean, aligned feature frame for inference.</text>
+</svg>

@@ -1,0 +1,129 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1200" viewBox="0 0 1800 1200">
+  <defs>
+    <style>
+      .title { font: 700 44px 'Segoe UI', Arial, sans-serif; fill: #0f172a; }
+      .subtitle { font: 500 24px 'Segoe UI', Arial, sans-serif; fill: #334155; }
+      .layerTitle { font: 700 28px 'Segoe UI', Arial, sans-serif; fill: #0f172a; }
+      .nodeTitle { font: 700 21px 'Segoe UI', Arial, sans-serif; fill: #0f172a; }
+      .nodeText { font: 400 18px 'Segoe UI', Arial, sans-serif; fill: #1e293b; }
+      .smallText { font: 400 16px 'Segoe UI', Arial, sans-serif; fill: #334155; }
+      .layerBox { fill: #f8fafc; stroke: #1e293b; stroke-width: 2; rx: 16; }
+      .nodeBox { fill: #ffffff; stroke: #334155; stroke-width: 2; rx: 12; }
+      .extBox { fill: #eef2ff; stroke: #3730a3; stroke-width: 2; rx: 12; }
+      .arrow { stroke: #0f172a; stroke-width: 3; fill: none; marker-end: url(#arrowhead); }
+      .dashArrow { stroke: #334155; stroke-width: 2.5; fill: none; marker-end: url(#arrowhead); stroke-dasharray: 8 8; }
+    </style>
+    <marker id="arrowhead" markerWidth="12" markerHeight="9" refX="10" refY="4.5" orient="auto">
+      <polygon points="0 0, 12 4.5, 0 9" fill="#0f172a" />
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1800" height="1200" fill="#ffffff"/>
+
+  <text x="900" y="70" text-anchor="middle" class="title">HealthMateAI Complete System Architecture</text>
+  <text x="900" y="108" text-anchor="middle" class="subtitle">Four Layer Pipeline</text>
+
+  <!-- Layer 1 -->
+  <rect class="layerBox" x="70" y="150" width="1660" height="170"/>
+  <text x="95" y="190" class="layerTitle">Layer 1: User and Client Layer</text>
+
+  <rect class="nodeBox" x="200" y="220" width="310" height="72"/>
+  <text x="355" y="264" text-anchor="middle" class="nodeTitle">Patient / User</text>
+
+  <rect class="nodeBox" x="650" y="210" width="650" height="92"/>
+  <text x="975" y="248" text-anchor="middle" class="nodeTitle">Android App (Jetpack Compose UI)</text>
+  <text x="975" y="278" text-anchor="middle" class="smallText">Input forms, result screens, and interaction flow</text>
+
+  <line class="arrow" x1="510" y1="256" x2="650" y2="256"/>
+
+  <!-- Layer 2 -->
+  <rect class="layerBox" x="70" y="350" width="1660" height="210"/>
+  <text x="95" y="390" class="layerTitle">Layer 2: Application and Integration Layer</text>
+
+  <rect class="nodeBox" x="130" y="430" width="500" height="95"/>
+  <text x="380" y="468" text-anchor="middle" class="nodeTitle">ViewModel + StateFlow</text>
+  <text x="380" y="498" text-anchor="middle" class="smallText">Validation, state handling, and orchestration</text>
+
+  <rect class="nodeBox" x="700" y="430" width="430" height="95"/>
+  <text x="915" y="468" text-anchor="middle" class="nodeTitle">Firebase Authentication</text>
+  <text x="915" y="498" text-anchor="middle" class="smallText">Login, signup, and session management</text>
+
+  <rect class="nodeBox" x="1200" y="430" width="450" height="95"/>
+  <text x="1425" y="468" text-anchor="middle" class="nodeTitle">HTTPS JSON Request Builder</text>
+  <text x="1425" y="498" text-anchor="middle" class="smallText">Prediction payload and API invocation</text>
+
+  <line class="arrow" x1="1300" y1="256" x2="1300" y2="430"/>
+  <line class="arrow" x1="630" y1="478" x2="700" y2="478"/>
+  <line class="arrow" x1="1130" y1="478" x2="1200" y2="478"/>
+
+  <!-- Layer 3 -->
+  <rect class="layerBox" x="70" y="590" width="1660" height="330"/>
+  <text x="95" y="630" class="layerTitle">Layer 3: AI Inference and Explainability Layer</text>
+
+  <rect class="nodeBox" x="120" y="675" width="290" height="80"/>
+  <text x="265" y="707" text-anchor="middle" class="nodeTitle">Flask API /predict</text>
+  <text x="265" y="734" text-anchor="middle" class="smallText">Backend inference endpoint</text>
+
+  <rect class="nodeBox" x="460" y="675" width="350" height="80"/>
+  <text x="635" y="707" text-anchor="middle" class="nodeTitle">Feature Preparation</text>
+  <text x="635" y="734" text-anchor="middle" class="smallText">Defaults + feature engineering</text>
+
+  <rect class="nodeBox" x="860" y="675" width="350" height="80"/>
+  <text x="1035" y="707" text-anchor="middle" class="nodeTitle">ML Models</text>
+  <text x="1035" y="734" text-anchor="middle" class="smallText">Diabetes and heart risk models</text>
+
+  <rect class="nodeBox" x="1260" y="650" width="420" height="92"/>
+  <text x="1470" y="686" text-anchor="middle" class="nodeTitle">SHAP Explainability</text>
+  <text x="1470" y="714" text-anchor="middle" class="smallText">Top contributor extraction</text>
+
+  <rect class="nodeBox" x="1260" y="760" width="420" height="92"/>
+  <text x="1470" y="796" text-anchor="middle" class="nodeTitle">Clinical Rule Overrides</text>
+  <text x="1470" y="824" text-anchor="middle" class="smallText">Threshold-based risk adjustment</text>
+
+  <rect class="nodeBox" x="820" y="790" width="380" height="95"/>
+  <text x="1010" y="828" text-anchor="middle" class="nodeTitle">LLM Advice Generation</text>
+  <text x="1010" y="858" text-anchor="middle" class="smallText">Short medical guidance text</text>
+
+  <line class="arrow" x1="1425" y1="525" x2="1425" y2="675"/>
+  <line class="arrow" x1="410" y1="715" x2="460" y2="715"/>
+  <line class="arrow" x1="810" y1="715" x2="860" y2="715"/>
+  <line class="arrow" x1="1210" y1="715" x2="1260" y2="700"/>
+  <line class="arrow" x1="1210" y1="715" x2="1260" y2="805"/>
+  <line class="arrow" x1="1260" y1="700" x2="1200" y2="820"/>
+  <line class="arrow" x1="1260" y1="805" x2="1200" y2="840"/>
+
+  <!-- Layer 4 -->
+  <rect class="layerBox" x="70" y="950" width="1660" height="180"/>
+  <text x="95" y="990" class="layerTitle">Layer 4: Data, Model Assets, and External Services Layer</text>
+
+  <rect class="extBox" x="130" y="1020" width="350" height="82"/>
+  <text x="305" y="1055" text-anchor="middle" class="nodeTitle">Clinical Datasets (CSV)</text>
+  <text x="305" y="1082" text-anchor="middle" class="smallText">Training and evaluation data</text>
+
+  <rect class="extBox" x="530" y="1020" width="360" height="82"/>
+  <text x="710" y="1055" text-anchor="middle" class="nodeTitle">Model Artifacts (.pkl)</text>
+  <text x="710" y="1082" text-anchor="middle" class="smallText">Serialized models, features, thresholds</text>
+
+  <rect class="extBox" x="940" y="1020" width="340" height="82"/>
+  <text x="1110" y="1055" text-anchor="middle" class="nodeTitle">Firebase Auth Backend</text>
+  <text x="1110" y="1082" text-anchor="middle" class="smallText">Identity and token validation</text>
+
+  <rect class="extBox" x="1330" y="1020" width="350" height="82"/>
+  <text x="1505" y="1055" text-anchor="middle" class="nodeTitle">Generative Language API</text>
+  <text x="1505" y="1082" text-anchor="middle" class="smallText">Advice text generation endpoint</text>
+
+  <line class="dashArrow" x1="305" y1="1020" x2="710" y2="1020"/>
+  <line class="dashArrow" x1="710" y1="1020" x2="1035" y2="755"/>
+  <line class="dashArrow" x1="915" y1="525" x2="1110" y2="1020"/>
+  <line class="dashArrow" x1="1010" y1="885" x2="1505" y2="1020"/>
+
+  <!-- Final response -->
+  <rect class="nodeBox" x="1300" y="780" width="360" height="105"/>
+  <text x="1480" y="817" text-anchor="middle" class="nodeTitle">Prediction Response</text>
+  <text x="1480" y="845" text-anchor="middle" class="smallText">Risk + Probability + Factors</text>
+  <text x="1480" y="869" text-anchor="middle" class="smallText">+ Generated Advice</text>
+
+  <line class="arrow" x1="1200" y1="838" x2="1300" y2="838"/>
+  <line class="arrow" x1="1480" y1="780" x2="1480" y2="535"/>
+  <line class="arrow" x1="1480" y1="535" x2="1300" y2="535"/>
+</svg>

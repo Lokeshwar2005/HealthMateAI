@@ -1,0 +1,139 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1200" viewBox="0 0 1800 1200">
+  <defs>
+    <style>
+      .title { font: 700 44px 'Segoe UI', Arial, sans-serif; fill: #0f172a; }
+      .subtitle { font: 500 24px 'Segoe UI', Arial, sans-serif; fill: #334155; }
+      .axisLabel { font: 700 24px 'Segoe UI', Arial, sans-serif; fill: #0f172a; }
+      .tick { font: 500 16px 'Segoe UI', Arial, sans-serif; fill: #334155; }
+      .legendTitle { font: 700 22px 'Segoe UI', Arial, sans-serif; fill: #0f172a; }
+      .legendText { font: 500 18px 'Segoe UI', Arial, sans-serif; fill: #1e293b; }
+      .caption { font: 700 24px 'Segoe UI', Arial, sans-serif; fill: #0f172a; }
+      .note { font: 500 15px 'Segoe UI', Arial, sans-serif; fill: #475569; }
+      .frame { fill: #ffffff; stroke: #1e293b; stroke-width: 2; rx: 16; }
+      .plotBg { fill: #f8fafc; stroke: #334155; stroke-width: 2; }
+      .grid { stroke: #cbd5e1; stroke-width: 1.5; }
+      .axis { stroke: #0f172a; stroke-width: 3.5; }
+      .chance { stroke: #64748b; stroke-width: 3; stroke-dasharray: 10 8; }
+      .svm { fill: none; stroke: #0ea5e9; stroke-width: 6; stroke-linecap: round; stroke-linejoin: round; }
+      .xgb { fill: none; stroke: #16a34a; stroke-width: 6; stroke-linecap: round; stroke-linejoin: round; }
+      .lstm { fill: none; stroke: #f97316; stroke-width: 6; stroke-linecap: round; stroke-linejoin: round; }
+      .dotSvm { fill: #0ea5e9; }
+      .dotXgb { fill: #16a34a; }
+      .dotLstm { fill: #f97316; }
+    </style>
+  </defs>
+
+  <rect x="0" y="0" width="1800" height="1200" fill="#ffffff"/>
+  <text x="900" y="70" text-anchor="middle" class="title">ROC Curves - SVM vs XGBoost vs LSTM</text>
+  <text x="900" y="106" text-anchor="middle" class="subtitle">Diabetes Dataset</text>
+
+  <rect class="frame" x="70" y="145" width="1660" height="980"/>
+
+  <!-- Plot area -->
+  <rect class="plotBg" x="170" y="220" width="1120" height="760"/>
+
+  <!-- Grid lines (x) -->
+  <line class="grid" x1="170" y1="980" x2="1290" y2="980"/>
+  <line class="grid" x1="170" y1="904" x2="1290" y2="904"/>
+  <line class="grid" x1="170" y1="828" x2="1290" y2="828"/>
+  <line class="grid" x1="170" y1="752" x2="1290" y2="752"/>
+  <line class="grid" x1="170" y1="676" x2="1290" y2="676"/>
+  <line class="grid" x1="170" y1="600" x2="1290" y2="600"/>
+  <line class="grid" x1="170" y1="524" x2="1290" y2="524"/>
+  <line class="grid" x1="170" y1="448" x2="1290" y2="448"/>
+  <line class="grid" x1="170" y1="372" x2="1290" y2="372"/>
+  <line class="grid" x1="170" y1="296" x2="1290" y2="296"/>
+  <line class="grid" x1="170" y1="220" x2="1290" y2="220"/>
+
+  <!-- Grid lines (y) -->
+  <line class="grid" x1="170" y1="220" x2="170" y2="980"/>
+  <line class="grid" x1="282" y1="220" x2="282" y2="980"/>
+  <line class="grid" x1="394" y1="220" x2="394" y2="980"/>
+  <line class="grid" x1="506" y1="220" x2="506" y2="980"/>
+  <line class="grid" x1="618" y1="220" x2="618" y2="980"/>
+  <line class="grid" x1="730" y1="220" x2="730" y2="980"/>
+  <line class="grid" x1="842" y1="220" x2="842" y2="980"/>
+  <line class="grid" x1="954" y1="220" x2="954" y2="980"/>
+  <line class="grid" x1="1066" y1="220" x2="1066" y2="980"/>
+  <line class="grid" x1="1178" y1="220" x2="1178" y2="980"/>
+  <line class="grid" x1="1290" y1="220" x2="1290" y2="980"/>
+
+  <!-- Axes -->
+  <line class="axis" x1="170" y1="980" x2="1290" y2="980"/>
+  <line class="axis" x1="170" y1="980" x2="170" y2="220"/>
+
+  <!-- Chance line -->
+  <line class="chance" x1="170" y1="980" x2="1290" y2="220"/>
+
+  <!-- ROC Curves -->
+  <!-- SVM -->
+  <path class="svm" d="M170,980 C210,900 250,860 282,828 C340,770 410,730 506,650 C595,575 665,530 730,486 C820,425 920,360 1066,295 C1160,252 1225,232 1290,220"/>
+
+  <!-- XGBoost -->
+  <path class="xgb" d="M170,980 C205,840 240,760 282,676 C335,570 400,500 506,410 C605,328 690,286 730,266 C820,220 920,220 1290,220"/>
+
+  <!-- LSTM -->
+  <path class="lstm" d="M170,980 C208,870 246,812 282,752 C340,660 410,590 506,500 C595,425 665,372 730,334 C820,280 920,245 1290,220"/>
+
+  <!-- Endpoint dots -->
+  <circle class="dotSvm" cx="170" cy="980" r="6"/>
+  <circle class="dotSvm" cx="1290" cy="220" r="6"/>
+  <circle class="dotXgb" cx="170" cy="980" r="6"/>
+  <circle class="dotXgb" cx="1290" cy="220" r="6"/>
+  <circle class="dotLstm" cx="170" cy="980" r="6"/>
+  <circle class="dotLstm" cx="1290" cy="220" r="6"/>
+
+  <!-- Tick labels X -->
+  <text class="tick" x="170" y="1012" text-anchor="middle">0.0</text>
+  <text class="tick" x="282" y="1012" text-anchor="middle">0.1</text>
+  <text class="tick" x="394" y="1012" text-anchor="middle">0.2</text>
+  <text class="tick" x="506" y="1012" text-anchor="middle">0.3</text>
+  <text class="tick" x="618" y="1012" text-anchor="middle">0.4</text>
+  <text class="tick" x="730" y="1012" text-anchor="middle">0.5</text>
+  <text class="tick" x="842" y="1012" text-anchor="middle">0.6</text>
+  <text class="tick" x="954" y="1012" text-anchor="middle">0.7</text>
+  <text class="tick" x="1066" y="1012" text-anchor="middle">0.8</text>
+  <text class="tick" x="1178" y="1012" text-anchor="middle">0.9</text>
+  <text class="tick" x="1290" y="1012" text-anchor="middle">1.0</text>
+
+  <!-- Tick labels Y -->
+  <text class="tick" x="145" y="985" text-anchor="end">0.0</text>
+  <text class="tick" x="145" y="909" text-anchor="end">0.1</text>
+  <text class="tick" x="145" y="833" text-anchor="end">0.2</text>
+  <text class="tick" x="145" y="757" text-anchor="end">0.3</text>
+  <text class="tick" x="145" y="681" text-anchor="end">0.4</text>
+  <text class="tick" x="145" y="605" text-anchor="end">0.5</text>
+  <text class="tick" x="145" y="529" text-anchor="end">0.6</text>
+  <text class="tick" x="145" y="453" text-anchor="end">0.7</text>
+  <text class="tick" x="145" y="377" text-anchor="end">0.8</text>
+  <text class="tick" x="145" y="301" text-anchor="end">0.9</text>
+  <text class="tick" x="145" y="225" text-anchor="end">1.0</text>
+
+  <!-- Axis labels -->
+  <text class="axisLabel" x="730" y="1070" text-anchor="middle">False Positive Rate (1 - Specificity)</text>
+  <g transform="translate(55,600) rotate(-90)">
+    <text class="axisLabel" text-anchor="middle">True Positive Rate (Sensitivity)</text>
+  </g>
+
+  <!-- Legend panel -->
+  <rect x="1350" y="300" width="310" height="340" fill="#f8fafc" stroke="#334155" stroke-width="2" rx="12"/>
+  <text x="1505" y="345" text-anchor="middle" class="legendTitle">Legend</text>
+
+  <line class="xgb" x1="1385" y1="390" x2="1465" y2="390"/>
+  <text x="1485" y="397" class="legendText">XGBoost</text>
+
+  <line class="lstm" x1="1385" y1="445" x2="1465" y2="445"/>
+  <text x="1485" y="452" class="legendText">LSTM</text>
+
+  <line class="svm" x1="1385" y1="500" x2="1465" y2="500"/>
+  <text x="1485" y="507" class="legendText">SVM</text>
+
+  <line class="chance" x1="1385" y1="555" x2="1465" y2="555"/>
+  <text x="1485" y="562" class="legendText">Chance Level</text>
+
+  <text x="1368" y="610" class="note">Upper-left dominance indicates</text>
+  <text x="1368" y="632" class="note">better discrimination ability.</text>
+
+  <!-- Figure caption -->
+  <text x="95" y="1145" class="caption">Fig 6. ROC Curves - Diabetes Dataset</text>
+</svg>

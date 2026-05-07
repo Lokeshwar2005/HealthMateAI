@@ -1,0 +1,156 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1900" height="1300" viewBox="0 0 1900 1300">
+  <defs>
+    <style>
+      .title { font: 700 44px 'Segoe UI', Arial, sans-serif; fill: #0f172a; }
+      .subtitle { font: 500 24px 'Segoe UI', Arial, sans-serif; fill: #334155; }
+      .laneTitle { font: 700 24px 'Segoe UI', Arial, sans-serif; fill: #0f172a; }
+      .boxTitle { font: 700 21px 'Segoe UI', Arial, sans-serif; fill: #0f172a; }
+      .boxText { font: 400 17px 'Segoe UI', Arial, sans-serif; fill: #1e293b; }
+      .smallText { font: 500 15px 'Segoe UI', Arial, sans-serif; fill: #334155; }
+      .lane { fill: #f8fafc; stroke: #1e293b; stroke-width: 2; rx: 18; }
+      .start { fill: #ecfeff; stroke: #0e7490; stroke-width: 2.5; rx: 14; }
+      .auth { fill: #fff7ed; stroke: #c2410c; stroke-width: 2.5; rx: 14; }
+      .app { fill: #eff6ff; stroke: #1d4ed8; stroke-width: 2.5; rx: 14; }
+      .dashboard { fill: #ecfdf5; stroke: #15803d; stroke-width: 2.5; rx: 14; }
+      .decision { fill: #ffffff; stroke: #475569; stroke-width: 2.5; }
+      .arrow { stroke: #0f172a; stroke-width: 3; fill: none; marker-end: url(#arrow); }
+      .softArrow { stroke: #475569; stroke-width: 2.5; fill: none; marker-end: url(#arrowSoft); }
+      .dashArrow { stroke: #475569; stroke-width: 2.5; fill: none; marker-end: url(#arrowSoft); stroke-dasharray: 8 8; }
+      .chip { fill: #ffffff; stroke: #94a3b8; stroke-width: 1.5; rx: 10; }
+      .step { font: 700 15px 'Segoe UI', Arial, sans-serif; fill: #0f172a; }
+    </style>
+    <marker id="arrow" markerWidth="12" markerHeight="9" refX="10" refY="4.5" orient="auto">
+      <polygon points="0 0, 12 4.5, 0 9" fill="#0f172a" />
+    </marker>
+    <marker id="arrowSoft" markerWidth="12" markerHeight="9" refX="10" refY="4.5" orient="auto">
+      <polygon points="0 0, 12 4.5, 0 9" fill="#475569" />
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1900" height="1300" fill="#ffffff"/>
+  <text x="950" y="70" text-anchor="middle" class="title">Android Application Screen Flow</text>
+  <text x="950" y="106" text-anchor="middle" class="subtitle">Splash to Clinical Dashboard</text>
+
+  <!-- Lanes -->
+  <rect class="lane" x="70" y="150" width="1760" height="190"/>
+  <text x="100" y="190" class="laneTitle">Phase A: App Launch and Session Gate</text>
+
+  <rect class="lane" x="70" y="370" width="1760" height="270"/>
+  <text x="100" y="410" class="laneTitle">Phase B: Authentication Journey</text>
+
+  <rect class="lane" x="70" y="670" width="1760" height="390"/>
+  <text x="100" y="710" class="laneTitle">Phase C: Clinical Workspace (PremiumAppScaffold)</text>
+
+  <!-- Phase A nodes -->
+  <rect class="start" x="140" y="225" width="340" height="86"/>
+  <text x="310" y="260" text-anchor="middle" class="boxTitle">SplashScreen</text>
+  <text x="310" y="287" text-anchor="middle" class="boxText">Animated launch experience</text>
+
+  <rect class="app" x="580" y="215" width="470" height="106"/>
+  <text x="815" y="257" text-anchor="middle" class="boxTitle">HealthMateAIApp (MainActivity)</text>
+  <text x="815" y="285" text-anchor="middle" class="boxText">Initialize Firebase, ViewModels, and state</text>
+
+  <polygon class="decision" points="1210,268 1315,208 1420,268 1315,328"/>
+  <text x="1315" y="258" text-anchor="middle" class="boxTitle">isLoggedIn?</text>
+  <text x="1315" y="286" text-anchor="middle" class="smallText">Session check</text>
+
+  <line class="arrow" x1="480" y1="268" x2="580" y2="268"/>
+  <line class="arrow" x1="1050" y1="268" x2="1210" y2="268"/>
+
+  <!-- Phase B nodes -->
+  <rect class="auth" x="1030" y="455" width="340" height="88"/>
+  <text x="1200" y="490" text-anchor="middle" class="boxTitle">AuthScreen</text>
+  <text x="1200" y="518" text-anchor="middle" class="boxText">Entry for unauthenticated users</text>
+
+  <rect class="auth" x="590" y="505" width="320" height="96"/>
+  <text x="750" y="543" text-anchor="middle" class="boxTitle">LoginScreen</text>
+  <text x="750" y="570" text-anchor="middle" class="boxText">Email/password or Google sign-in</text>
+
+  <rect class="auth" x="1450" y="505" width="320" height="96"/>
+  <text x="1610" y="543" text-anchor="middle" class="boxTitle">SignUpScreen</text>
+  <text x="1610" y="570" text-anchor="middle" class="boxText">Create account and validate fields</text>
+
+  <rect class="auth" x="1030" y="530" width="340" height="88" opacity="0"/>
+
+  <polygon class="decision" points="1200,620 1310,675 1200,730 1090,675"/>
+  <text x="1200" y="670" text-anchor="middle" class="boxTitle">Auth Success?</text>
+  <text x="1200" y="695" text-anchor="middle" class="smallText">StateFlow auth result</text>
+
+  <line class="arrow" x1="1315" y1="328" x2="1315" y2="455"/>
+  <text x="1330" y="398" class="smallText">No</text>
+
+  <line class="arrow" x1="1030" y1="500" x2="910" y2="550"/>
+  <line class="arrow" x1="1370" y1="500" x2="1450" y2="550"/>
+  <line class="softArrow" x1="910" y1="550" x2="1450" y2="550"/>
+  <line class="softArrow" x1="1450" y1="580" x2="910" y2="580"/>
+  <text x="1080" y="536" class="smallText">Toggle</text>
+
+  <line class="arrow" x1="750" y1="601" x2="1110" y2="675"/>
+  <line class="arrow" x1="1610" y1="601" x2="1290" y2="675"/>
+  <line class="softArrow" x1="1200" y1="730" x2="1200" y2="760"/>
+  <text x="1218" y="748" class="smallText">Yes</text>
+
+  <line class="dashArrow" x1="1150" y1="720" x2="840" y2="620"/>
+  <text x="920" y="700" class="smallText">No - show error and retry</text>
+
+  <!-- Phase C nodes -->
+  <rect class="app" x="980" y="780" width="440" height="102"/>
+  <text x="1200" y="821" text-anchor="middle" class="boxTitle">PremiumAppScaffold</text>
+  <text x="1200" y="848" text-anchor="middle" class="boxText">Bottom navigation host (3 tabs)</text>
+
+  <rect class="dashboard" x="170" y="930" width="470" height="100"/>
+  <text x="405" y="970" text-anchor="middle" class="boxTitle">DashboardScreen (Clinical Dashboard)</text>
+  <text x="405" y="998" text-anchor="middle" class="boxText">Risk cards, quick actions, trend summary</text>
+
+  <rect class="app" x="720" y="930" width="470" height="100"/>
+  <text x="955" y="970" text-anchor="middle" class="boxTitle">PredictionScreen</text>
+  <text x="955" y="998" text-anchor="middle" class="boxText">Input form, model call, gauge, explanation</text>
+
+  <rect class="app" x="1270" y="930" width="470" height="100"/>
+  <text x="1505" y="970" text-anchor="middle" class="boxTitle">ProfileScreen</text>
+  <text x="1505" y="998" text-anchor="middle" class="boxText">Account details, safety notes, logout</text>
+
+  <line class="arrow" x1="1200" y1="882" x2="1200" y2="930"/>
+  <line class="arrow" x1="1200" y1="930" x2="640" y2="980"/>
+  <line class="arrow" x1="1200" y1="930" x2="1190" y2="980"/>
+  <line class="arrow" x1="1200" y1="930" x2="1270" y2="980"/>
+
+  <line class="softArrow" x1="640" y1="980" x2="720" y2="980"/>
+  <line class="softArrow" x1="1190" y1="980" x2="1270" y2="980"/>
+  <line class="softArrow" x1="1270" y1="1010" x2="640" y2="1010"/>
+
+  <line class="dashArrow" x1="955" y1="930" x2="500" y2="930"/>
+  <text x="620" y="910" class="smallText">Prediction updates dashboard risk cards</text>
+
+  <line class="dashArrow" x1="1505" y1="930" x2="1340" y2="730"/>
+  <text x="1390" y="830" class="smallText">Logout triggers auth gate</text>
+
+  <!-- Yes branch from first decision -->
+  <line class="arrow" x1="1420" y1="268" x2="1580" y2="268"/>
+  <line class="arrow" x1="1580" y1="268" x2="1580" y2="780"/>
+  <line class="arrow" x1="1580" y1="780" x2="1420" y2="780"/>
+  <text x="1460" y="255" class="smallText">Yes</text>
+
+  <!-- Step chips -->
+  <rect class="chip" x="515" y="246" width="32" height="26"/>
+  <text x="531" y="264" text-anchor="middle" class="step">1</text>
+
+  <rect class="chip" x="1070" y="245" width="32" height="26"/>
+  <text x="1086" y="264" text-anchor="middle" class="step">2</text>
+
+  <rect class="chip" x="1328" y="350" width="32" height="26"/>
+  <text x="1344" y="368" text-anchor="middle" class="step">3</text>
+
+  <rect class="chip" x="1088" y="471" width="32" height="26"/>
+  <text x="1104" y="489" text-anchor="middle" class="step">4</text>
+
+  <rect class="chip" x="1184" y="742" width="32" height="26"/>
+  <text x="1200" y="760" text-anchor="middle" class="step">5</text>
+
+  <rect class="chip" x="1178" y="893" width="32" height="26"/>
+  <text x="1194" y="911" text-anchor="middle" class="step">6</text>
+
+  <!-- Caption -->
+  <text x="95" y="1165" class="boxTitle">Fig 3. Android Application Screen Flow</text>
+  <text x="95" y="1193" class="boxText">Flow starts at SplashScreen, branches through authentication when needed, and converges in the tabbed clinical workspace where Dashboard is the primary destination.</text>
+</svg>
