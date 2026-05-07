@@ -9,7 +9,7 @@ import retrofit2.http.Body
 import retrofit2.http.POST
 import java.util.concurrent.TimeUnit
 
-private const val BASE_URL = "http://10.0.2.2:5000/"
+private const val BASE_URL = "https://healthmateai-mlds.onrender.com/"
 
 interface PredictionApiService {
     @POST("predict")
