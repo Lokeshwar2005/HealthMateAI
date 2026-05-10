@@ -1,9 +1,22 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.google.gms.google.services)
+    alias(libs.plugins.ksp)
     id("org.jetbrains.kotlin.plugin.compose") version "2.0.21"
 }
+
+val localProperties = Properties().apply {
+    val localFile = rootProject.file("local.properties")
+    if (localFile.exists()) {
+        localFile.inputStream().use { load(it) }
+    }
+}
+
+val openRouterApiKey = localProperties.getProperty("OPENROUTER_API_KEY", "")
+val openRouterModel = localProperties.getProperty("OPENROUTER_MODEL", "openai/gpt-4.1-mini")
 
 android {
     namespace = "com.example.healthmateai"
@@ -17,6 +30,9 @@ android {
         targetSdk = 36
         versionCode = 1
         versionName = "1.0"
+
+        buildConfigField("String", "OPENROUTER_API_KEY", "\"$openRouterApiKey\"")
+        buildConfigField("String", "OPENROUTER_MODEL", "\"$openRouterModel\"")
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -39,6 +55,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 }
 
@@ -58,8 +75,13 @@ dependencies {
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.compose.foundation)
     implementation(libs.androidx.compose.runtime)
+    implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
+    implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.room.ktx)
+    implementation(libs.androidx.work.runtime.ktx)
+    ksp(libs.androidx.room.compiler)
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.kotlinx.coroutines.android)
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.2")

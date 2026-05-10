@@ -29,7 +29,9 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AutoGraph
 import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.Medication
 import androidx.compose.material.icons.filled.QueryStats
+import androidx.compose.material.icons.filled.SmartToy
 import androidx.compose.material.icons.filled.Timeline
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -58,7 +60,7 @@ import com.example.healthmateai.ui.theme.BgDark
 import com.example.healthmateai.ui.theme.HealthMateAITheme
 import java.util.Calendar
 
-enum class QuickAction { Insights, Trends, Recommendations }
+enum class QuickAction { DietPlanner, MedicineReminder, Chatbot }
 
 private data class RiskSummary(
     val title: String,
@@ -67,6 +69,8 @@ private data class RiskSummary(
 
 private data class ActionItem(
     val title: String,
+    val subtitle: String,
+    val cta: String,
     val icon: ImageVector,
     val action: QuickAction
 )
@@ -94,10 +98,28 @@ fun DashboardScreen(
         RiskSummary(title = "Heart Risk", value = heartRisk)
     )
 
-    val quickActions = listOf(
-        ActionItem("View Insights", Icons.Default.QueryStats, QuickAction.Insights),
-        ActionItem("Track Health Trends", Icons.Default.Timeline, QuickAction.Trends),
-        ActionItem("Get Recommendations", Icons.Default.AutoGraph, QuickAction.Recommendations)
+    val chatbotAction = ActionItem(
+        title = "AI Chatbot",
+        subtitle = "Talk with HealthMate AI for symptom, diet, and prediction guidance.",
+        cta = "Ask AI",
+        icon = Icons.Default.SmartToy,
+        action = QuickAction.Chatbot
+    )
+    val plannerActions = listOf(
+        ActionItem(
+            title = "AI Diet Planner",
+            subtitle = "Generate adaptive meal plans from your current risk profile.",
+            cta = "Create Plan",
+            icon = Icons.Default.AutoGraph,
+            action = QuickAction.DietPlanner
+        ),
+        ActionItem(
+            title = "Medicine Reminder",
+            subtitle = "Schedule dosage alerts with recurring notification logic.",
+            cta = "Add Reminder",
+            icon = Icons.Default.Medication,
+            action = QuickAction.MedicineReminder
+        )
     )
 
     LazyColumn(
@@ -121,19 +143,25 @@ fun DashboardScreen(
             SectionHeader(title = "Quick Actions", subtitle = "Shortcuts to your AI health workspace")
         }
         item {
-            FlowRow(
-                modifier = Modifier.fillMaxWidth(),
-                maxItemsInEachRow = 2,
-                horizontalArrangement = Arrangement.spacedBy(12.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                quickActions.forEach { action ->
-                    QuickActionChip(
-                        title = action.title,
-                        icon = action.icon,
-                        modifier = Modifier.weight(1f),
-                        onTap = { onQuickAction(action.action) }
-                    )
+            Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                PrimaryQuickActionCard(
+                    item = chatbotAction,
+                    onTap = { onQuickAction(chatbotAction.action) }
+                )
+
+                FlowRow(
+                    modifier = Modifier.fillMaxWidth(),
+                    maxItemsInEachRow = 2,
+                    horizontalArrangement = Arrangement.spacedBy(12.dp),
+                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    plannerActions.forEach { action ->
+                        SecondaryQuickActionCard(
+                            item = action,
+                            modifier = Modifier.weight(1f),
+                            onTap = { onQuickAction(action.action) }
+                        )
+                    }
                 }
             }
         }
@@ -322,9 +350,8 @@ private fun RiskCard(title: String, progress: Float) {
 }
 
 @Composable
-private fun QuickActionChip(
-    title: String,
-    icon: ImageVector,
+private fun PrimaryQuickActionCard(
+    item: ActionItem,
     modifier: Modifier = Modifier,
     onTap: () -> Unit
 ) {
@@ -343,39 +370,120 @@ private fun QuickActionChip(
                 scaleX = scale
                 scaleY = scale
             },
+        shape = RoundedCornerShape(22.dp),
+        colors = CardDefaults.cardColors(containerColor = Color.Transparent),
+        elevation = CardDefaults.cardElevation(defaultElevation = 12.dp),
+        interactionSource = interactionSource,
+        onClick = onTap
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(
+                    Brush.linearGradient(
+                        listOf(Color(0xFF123056), Color(0xFF172549), Color(0xFF123055))
+                    )
+                )
+                .padding(horizontal = 16.dp, vertical = 18.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            Row(horizontalArrangement = Arrangement.spacedBy(10.dp), verticalAlignment = Alignment.CenterVertically) {
+                Surface(
+                    color = Color(0x1F42E2FF),
+                    shape = RoundedCornerShape(14.dp),
+                    border = androidx.compose.foundation.BorderStroke(1.dp, Color(0x8049DFFF))
+                ) {
+                    Icon(
+                        imageVector = item.icon,
+                        contentDescription = item.title,
+                        tint = Color(0xFF5CF1FF),
+                        modifier = Modifier.padding(10.dp)
+                    )
+                }
+                Text(
+                    text = item.title,
+                    style = MaterialTheme.typography.titleLarge,
+                    color = Color(0xFFF4F9FF),
+                    fontWeight = FontWeight.Bold
+                )
+            }
+
+            Text(
+                text = item.subtitle,
+                style = MaterialTheme.typography.bodyLarge,
+                color = Color(0xFFD0E5FF)
+            )
+
+            Surface(
+                shape = RoundedCornerShape(12.dp),
+                color = Color(0x214FE8FF),
+                border = androidx.compose.foundation.BorderStroke(1.dp, Color(0x8852E8FF))
+            ) {
+                Text(
+                    text = item.cta,
+                    style = MaterialTheme.typography.titleSmall,
+                    color = Color(0xFF78F0FF),
+                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
+                    fontWeight = FontWeight.Bold
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun SecondaryQuickActionCard(
+    item: ActionItem,
+    modifier: Modifier = Modifier,
+    onTap: () -> Unit
+) {
+    val interactionSource = remember { MutableInteractionSource() }
+    val pressed by interactionSource.collectIsPressedAsState()
+    val scale by animateFloatAsState(
+        targetValue = if (pressed) 0.985f else 1f,
+        animationSpec = tween(110),
+        label = "quickSecondaryScale"
+    )
+
+    Card(
+        modifier = modifier
+            .fillMaxWidth()
+            .graphicsLayer {
+                scaleX = scale
+                scaleY = scale
+            },
         shape = RoundedCornerShape(18.dp),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFF141D39)),
+        colors = CardDefaults.cardColors(containerColor = Color.Transparent),
         elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
         interactionSource = interactionSource,
         onClick = onTap
     ) {
-        Row(
+        Column(
             modifier = Modifier
                 .fillMaxWidth()
+                .background(
+                    Brush.linearGradient(
+                        listOf(Color(0xFF132645), Color(0xFF192A50), Color(0xFF10203A))
+                    )
+                )
                 .padding(horizontal = 14.dp, vertical = 14.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(10.dp)
+            verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             Surface(
-                color = Color(0x1F42E2FF),
+                color = Color(0x1946E5FF),
                 shape = RoundedCornerShape(12.dp),
-                border = androidx.compose.foundation.BorderStroke(1.dp, Color(0x6649DFFF))
+                border = androidx.compose.foundation.BorderStroke(1.dp, Color(0x6645DAFF))
             ) {
                 Icon(
-                    imageVector = icon,
-                    contentDescription = title,
-                    tint = Color(0xFF59E6FF),
-                    modifier = Modifier.padding(8.dp)
+                    imageVector = item.icon,
+                    contentDescription = item.title,
+                    tint = Color(0xFF5EEBFF),
+                    modifier = Modifier.padding(9.dp)
                 )
             }
-            Column(modifier = Modifier.weight(1f)) {
-                Text(
-                    text = title,
-                    style = MaterialTheme.typography.titleSmall,
-                    color = Color(0xFFEAF2FF),
-                    fontWeight = FontWeight.SemiBold
-                )
-            }
+            Text(item.title, color = Color(0xFFF0F7FF), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
+            Text(item.subtitle, color = Color(0xFF9AB5DE), style = MaterialTheme.typography.bodyMedium)
+            Text(item.cta, color = Color(0xFF6CEEFF), style = MaterialTheme.typography.labelLarge, fontWeight = FontWeight.Bold)
         }
     }
 }

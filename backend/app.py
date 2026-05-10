@@ -7,6 +7,16 @@ from openai import OpenAI
 
 app = Flask(__name__)
 
+OPENROUTER_MODEL = os.getenv("OPENROUTER_MODEL", "openrouter/auto")
+OPENROUTER_FALLBACK_MODELS = [
+    model.strip()
+    for model in os.getenv(
+        "OPENROUTER_FALLBACK_MODELS",
+        "openai/gpt-4.1-mini,google/gemini-2.0-flash-001,anthropic/claude-3.5-haiku"
+    ).split(",")
+    if model.strip()
+]
+
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 PROJECT_DIR = os.path.abspath(os.path.join(BASE_DIR, ".."))
 MODEL_DIR = os.path.join(PROJECT_DIR, "ml_notebooks")
@@ -110,6 +120,31 @@ def validate_inputs(disease, input_data):
     return None
 
 
+def build_fallback_advice(risk_level, readable_factors):
+    """Provide a concise local fallback when OpenRouter is unavailable."""
+    base_advice = {
+        "High": "Prioritize a clinician review soon. Focus on medication adherence, diet control, and close symptom monitoring.",
+        "Medium": "Use balanced meals, regular activity, and consistent monitoring to reduce risk progression.",
+        "Low": "Keep up preventive habits: healthy meals, hydration, sleep, and regular activity.",
+    }
+
+    factor_notes = {
+        "High blood sugar level": "Limit sugary drinks and refined carbs.",
+        "Combined effect of glucose and BMI": "Combine portion control with weight-friendly meal planning.",
+        "Blood pressure level": "Reduce sodium and processed foods.",
+        "Chronic blood pressure burden": "Keep sodium low and check blood pressure regularly.",
+        "Heart pumping efficiency": "Watch for breathlessness or swelling and seek follow-up if symptoms worsen.",
+        "Kidney function level": "Stay hydrated and avoid unnecessary NSAID use.",
+        "Smoking-related cardiovascular risk": "Avoid smoking and secondhand smoke completely.",
+        "Genetic diabetes risk": "Be strict with lifestyle prevention and routine screening.",
+    }
+
+    notes = [factor_notes[factor] for factor in readable_factors if factor in factor_notes]
+    if notes:
+        return f"{base_advice.get(risk_level, base_advice['Medium'])} {' '.join(notes)}"
+    return base_advice.get(risk_level, base_advice['Medium'])
+
+
 @app.route("/predict", methods=["POST"])
 def predict():
     data = request.get_json(force=True)
@@ -180,35 +215,39 @@ Give short medical advice.
         timeout=60.0,
     )
 
-    try:
-        # Stream the response from OpenRouter
-        stream = client.chat.completions.create(
-            model="tencent/hy3-preview:free",
-            messages=[
-                {
-                    "role": "user",
-                    "content": prompt
-                }
-            ],
-            stream_options={"include_usage": True},
-            stream=True
-        )
+    candidate_models = [OPENROUTER_MODEL] + [
+        model for model in OPENROUTER_FALLBACK_MODELS if model != OPENROUTER_MODEL
+    ]
 
-        advice = ""
-        reasoning_tokens = 0
-        
-        for chunk in stream:
-            if chunk.choices[0].delta.content:
-                advice += chunk.choices[0].delta.content
-            
-            # Usage information comes in the final chunk
-            if chunk.usage:
-                reasoning_tokens = getattr(chunk.usage, 'reasoning_tokens', 0)
-    except Exception as e:
-        if "timed out" in str(e).lower():
-            advice = "Advice service timed out. Please consult a healthcare professional."
+    advice = None
+    failures = []
+
+    for model_name in candidate_models:
+        try:
+            response = client.chat.completions.create(
+                model=model_name,
+                messages=[
+                    {
+                        "role": "user",
+                        "content": prompt
+                    }
+                ],
+                timeout=45.0,
+            )
+
+            advice = (response.choices[0].message.content or "").strip()
+            if advice:
+                break
+            failures.append(f"{model_name}: empty response")
+        except Exception as e:
+            failures.append(f"{model_name}: {str(e)}")
+
+    if not advice:
+        joined_failures = " | ".join(failures)
+        if "timed out" in joined_failures.lower():
+            advice = build_fallback_advice(risk_level, readable)
         else:
-            advice = f"Advice service unavailable: {str(e)}"
+            advice = build_fallback_advice(risk_level, readable)
 
     return jsonify(
         {

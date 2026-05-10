@@ -16,6 +16,7 @@ import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Arrangement
@@ -67,6 +68,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.healthmateai.ui.components.AppPadding
+import com.example.healthmateai.ui.components.AppSpacing
+import com.example.healthmateai.ui.components.PremiumBackButton
+import com.example.healthmateai.ui.components.PremiumGlowButton
+import com.example.healthmateai.ui.components.PremiumHeaderCard
 import com.example.healthmateai.ui.theme.BgDark
 import com.example.healthmateai.ui.theme.GradientEnd
 import com.example.healthmateai.ui.theme.GradientStart
@@ -87,7 +93,7 @@ data class WizardField(
 @Composable
 fun PredictionScreen(
     contentPadding: PaddingValues,
-    onPrediction: (disease: String, probability: Float) -> Unit,
+    onPrediction: (disease: String, probability: Float, inputs: Map<String, Any>) -> Unit,
     viewModel: PredictionViewModel = viewModel(factory = PredictionViewModelFactory)
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -138,7 +144,7 @@ fun PredictionScreen(
 
     LaunchedEffect(uiState.result?.probability) {
         uiState.result?.let { result ->
-            onPrediction(disease, result.probability.toFloat())
+            onPrediction(disease, result.probability.toFloat(), values.toMap())
         }
     }
 
@@ -146,12 +152,12 @@ fun PredictionScreen(
         modifier = Modifier
             .fillMaxSize()
             .background(BgDark)
-            .padding(horizontal = 20.dp)
+            .padding(horizontal = AppPadding.screenHorizontal, vertical = AppPadding.screenVertical)
             .padding(contentPadding)
             .verticalScroll(rememberScrollState()),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+        verticalArrangement = Arrangement.spacedBy(AppSpacing.xl)
     ) {
-        Spacer(Modifier.height(8.dp))
+        Spacer(Modifier.height(AppSpacing.md))
         PredictionHeroBar()
 
         DiseaseSegmentedControl(
@@ -188,89 +194,34 @@ fun PredictionScreen(
             )
         }
 
-        Surface(
-            modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(18.dp),
-            color = Color(0xFF172444),
-            shadowElevation = 8.dp,
-            tonalElevation = 2.dp
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 0.dp, vertical = 4.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 14.dp, vertical = 12.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                OutlinedButton(
-                    onClick = { if (currentStep > 0) currentStep -= 1 },
-                    enabled = currentStep > 0,
-                    shape = RoundedCornerShape(14.dp),
-                    border = ButtonDefaults.outlinedButtonBorder,
-                    contentPadding = PaddingValues(vertical = 14.dp),
-                    modifier = Modifier.weight(1f)
-                ) {
-                    Text(
-                        text = "Back",
-                        style = MaterialTheme.typography.labelLarge,
-                        fontWeight = FontWeight.SemiBold
-                    )
-                }
+            PremiumBackButton(
+                onClick = { if (currentStep > 0) currentStep -= 1 },
+                enabled = currentStep > 0,
+                modifier = Modifier.weight(0.9f)
+            )
 
-                val primaryInteractionSource = remember { MutableInteractionSource() }
-                val primaryPressed by primaryInteractionSource.collectIsPressedAsState()
-                val primaryScale by animateFloatAsState(
-                    targetValue = if (primaryPressed) 0.98f else 1f,
-                    animationSpec = tween(durationMillis = 120),
-                    label = "nextButtonScale"
-                )
-
-                Button(
-                    onClick = {
-                        if (currentStep < activeFields.lastIndex) {
-                            currentStep += 1
-                        } else {
-                            val payload = values.mapValues { (_, value) ->
-                                if (value == 0f || value == 1f) value.toInt() else String.format("%.2f", value).toDouble()
-                            }
-                            viewModel.predict(disease, payload)
+            PremiumGlowButton(
+                text = if (currentStep < activeFields.lastIndex) "Next" else "Run Prediction",
+                onClick = {
+                    if (currentStep < activeFields.lastIndex) {
+                        currentStep += 1
+                    } else {
+                        val payload = values.mapValues { (_, value) ->
+                            if (value == 0f || value == 1f) value.toInt() else String.format("%.2f", value).toDouble()
                         }
-                    },
-                    interactionSource = primaryInteractionSource,
-                    shape = RoundedCornerShape(14.dp),
-                    elevation = ButtonDefaults.buttonElevation(
-                        defaultElevation = 6.dp,
-                        pressedElevation = 2.dp,
-                        focusedElevation = 6.dp,
-                        hoveredElevation = 6.dp,
-                        disabledElevation = 0.dp
-                    ),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Color.Transparent,
-                        contentColor = Color(0xFF031C25),
-                        disabledContainerColor = MaterialTheme.colorScheme.surfaceVariant,
-                        disabledContentColor = MaterialTheme.colorScheme.onSurfaceVariant
-                    ),
-                    contentPadding = PaddingValues(horizontal = 20.dp, vertical = 14.dp),
-                    modifier = Modifier
-                        .weight(1.35f)
-                        .height(52.dp)
-                        .graphicsLayer {
-                            scaleX = primaryScale
-                            scaleY = primaryScale
-                        }
-                        .background(
-                            brush = Brush.horizontalGradient(listOf(Color(0xFF24C4BF), Color(0xFF58E5FF))),
-                            shape = RoundedCornerShape(14.dp)
-                        )
-                ) {
-                    Text(
-                        text = if (currentStep < activeFields.lastIndex) "Next" else "Run Prediction",
-                        style = MaterialTheme.typography.titleSmall,
-                        fontWeight = FontWeight.Bold
-                    )
-                }
-            }
+                        viewModel.predict(disease, payload)
+                    }
+                },
+                enabled = true,
+                modifier = Modifier.weight(1.1f)
+            )
         }
 
         PredictionGauge(probability = animatedProbability, risk = uiState.result?.risk ?: "-", loading = uiState.isLoading)
@@ -290,7 +241,7 @@ fun PredictionScreen(
             Text(uiState.errorMessage ?: "Unknown error", color = MaterialTheme.colorScheme.error)
         }
 
-        Spacer(Modifier.height(12.dp))
+        Spacer(Modifier.height(AppSpacing.xl))
     }
 }
 
@@ -413,33 +364,11 @@ private fun PredictionGauge(probability: Float, risk: String, loading: Boolean) 
 
 @Composable
 private fun PredictionHeroBar() {
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(18.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.Transparent),
-        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
-    ) {
-        Column(
-            modifier = Modifier
-                .background(
-                    brush = Brush.horizontalGradient(listOf(Color(0xFF132A4F), Color(0xFF1A4360)))
-                )
-                .padding(horizontal = 16.dp, vertical = 14.dp),
-            verticalArrangement = Arrangement.spacedBy(4.dp)
-        ) {
-            Text(
-                text = "Disease Prediction",
-                style = MaterialTheme.typography.headlineSmall,
-                color = Color(0xFFF4F8FF),
-                fontWeight = FontWeight.ExtraBold
-            )
-            Text(
-                text = "AI-guided assessment with step-by-step inputs",
-                style = MaterialTheme.typography.bodyMedium,
-                color = Color(0xFFABC0E8)
-            )
-        }
-    }
+    PremiumHeaderCard(
+        title = "Disease Prediction",
+        subtitle = "AI-guided assessment with step-by-step inputs",
+        icon = null
+    )
 }
 
 @SuppressLint("UnusedBoxWithConstraintsScope")
@@ -555,6 +484,6 @@ private fun StepProgressBar(progress: Float) {
 @Composable
 private fun PredictionPreview() {
     HealthMateAITheme {
-        PredictionScreen(contentPadding = PaddingValues(0.dp), onPrediction = { _, _ -> })
+        PredictionScreen(contentPadding = PaddingValues(0.dp), onPrediction = { _, _, _ -> })
     }
 }
