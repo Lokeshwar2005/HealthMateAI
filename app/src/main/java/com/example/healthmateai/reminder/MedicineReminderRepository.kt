@@ -1,21 +1,18 @@
 package com.example.healthmateai.reminder
 
+import android.app.AlarmManager
+import android.app.PendingIntent
 import android.content.Context
-import androidx.work.Constraints
-import androidx.work.Data
-import androidx.work.ExistingPeriodicWorkPolicy
-import androidx.work.NetworkType
-import androidx.work.PeriodicWorkRequestBuilder
-import androidx.work.WorkManager
+import android.content.Intent
 import kotlinx.coroutines.flow.Flow
 import java.util.Calendar
-import java.util.concurrent.TimeUnit
+import android.util.Log
 
-class MedicineReminderRepository(context: Context) {
+class MedicineReminderRepository(private val context: Context) {
 
     private val appDatabase = AppDatabase.getInstance(context)
     private val dao = appDatabase.medicineReminderDao()
-    private val workManager = WorkManager.getInstance(context)
+    private val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
     fun observeAll(): Flow<List<MedicineReminderEntity>> = dao.observeAll()
 
@@ -38,66 +35,120 @@ class MedicineReminderRepository(context: Context) {
             minute = minute,
             frequency = frequency,
             customIntervalHours = customIntervalHours,
-            nextTriggerAtMillis = nextTrigger
+            nextTriggerAtMillis = nextTrigger,
+            isEnabled = true
         )
 
         val id = dao.upsert(reminder)
-        scheduleReminderWork(
+        scheduleAlarm(
             reminderId = id,
+            medicineName = medicineName,
+            dosage = dosage,
+            nextTriggerAtMillis = nextTrigger
+        )
+    }
+
+    suspend fun updateReminder(
+        id: Long,
+        medicineName: String,
+        dosage: String,
+        hourOfDay: Int,
+        minute: Int,
+        frequency: ReminderFrequency,
+        customIntervalHours: Int?
+    ) {
+        val now = System.currentTimeMillis()
+        val nextTrigger = computeNextTrigger(now, hourOfDay, minute)
+        val updated = MedicineReminderEntity(
+            id = id,
             medicineName = medicineName,
             dosage = dosage,
             hourOfDay = hourOfDay,
             minute = minute,
             frequency = frequency,
             customIntervalHours = customIntervalHours,
+            nextTriggerAtMillis = nextTrigger,
+            isEnabled = true
+        )
+        dao.update(updated)
+        cancelAlarm(id)
+        scheduleAlarm(
+            reminderId = id,
+            medicineName = medicineName,
+            dosage = dosage,
             nextTriggerAtMillis = nextTrigger
         )
     }
 
-    private fun scheduleReminderWork(
+    suspend fun deleteReminder(id: Long) {
+        dao.deleteById(id)
+        cancelAlarm(id)
+    }
+
+    suspend fun toggleReminder(id: Long, enabled: Boolean) {
+        dao.setEnabled(id, enabled)
+        if (enabled) {
+            val reminder = dao.getById(id) ?: return
+            
+            // Recompute next trigger if it's in the past
+            val now = System.currentTimeMillis()
+            var nextTrigger = reminder.nextTriggerAtMillis
+            if (nextTrigger <= now) {
+                nextTrigger = computeNextTrigger(now, reminder.hourOfDay, reminder.minute)
+                dao.update(reminder.copy(nextTriggerAtMillis = nextTrigger))
+            }
+            
+            scheduleAlarm(
+                reminderId = reminder.id,
+                medicineName = reminder.medicineName,
+                dosage = reminder.dosage,
+                nextTriggerAtMillis = nextTrigger
+            )
+        } else {
+            cancelAlarm(id)
+        }
+    }
+
+    private fun cancelAlarm(reminderId: Long) {
+        val intent = Intent(context, MedicineAlarmReceiver::class.java)
+        val pendingIntent = PendingIntent.getBroadcast(
+            context,
+            reminderId.toInt(),
+            intent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+        alarmManager.cancel(pendingIntent)
+        Log.d("ReminderRepo", "Cancelled alarm for id: ${reminderId}")
+    }
+
+    fun scheduleAlarm(
         reminderId: Long,
         medicineName: String,
         dosage: String,
-        hourOfDay: Int,
-        minute: Int,
-        frequency: ReminderFrequency,
-        customIntervalHours: Int?,
         nextTriggerAtMillis: Long
     ) {
-        val repeatInterval = when (frequency) {
-            ReminderFrequency.DAILY -> 1L to TimeUnit.DAYS
-            ReminderFrequency.WEEKLY -> 7L to TimeUnit.DAYS
-            ReminderFrequency.CUSTOM -> (customIntervalHours ?: 24).toLong() to TimeUnit.HOURS
+        val intent = Intent(context, MedicineAlarmReceiver::class.java).apply {
+            putExtra("reminderId", reminderId)
+            putExtra("medicineName", medicineName)
+            putExtra("dosage", dosage)
         }
 
-        val now = System.currentTimeMillis()
-        val initialDelay = (nextTriggerAtMillis - now).coerceAtLeast(0L)
-        val timeLabel = String.format("%02d:%02d", hourOfDay, minute)
-
-        val request = PeriodicWorkRequestBuilder<MedicineReminderWorker>(
-            repeatInterval.first,
-            repeatInterval.second
+        val pendingIntent = PendingIntent.getBroadcast(
+            context,
+            reminderId.toInt(),
+            intent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
-            .setInitialDelay(initialDelay, TimeUnit.MILLISECONDS)
-            .setConstraints(
-                Constraints.Builder()
-                    .setRequiredNetworkType(NetworkType.NOT_REQUIRED)
-                    .build()
-            )
-            .setInputData(
-                Data.Builder()
-                    .putString("medicineName", medicineName)
-                    .putString("dosage", dosage)
-                    .putString("timeLabel", timeLabel)
-                    .build()
-            )
-            .build()
 
-        workManager.enqueueUniquePeriodicWork(
-            "medicine_reminder_$reminderId",
-            ExistingPeriodicWorkPolicy.UPDATE,
-            request
-        )
+        try {
+            val alarmClockInfo = AlarmManager.AlarmClockInfo(nextTriggerAtMillis, pendingIntent)
+            alarmManager.setAlarmClock(alarmClockInfo, pendingIntent)
+            Log.d("ReminderRepo", "Scheduled exact alarm for id: ${reminderId} at $nextTriggerAtMillis")
+        } catch (e: SecurityException) {
+            Log.e("ReminderRepo", "Exact alarm permission missing", e)
+            // Fallback
+            alarmManager.set(AlarmManager.RTC_WAKEUP, nextTriggerAtMillis, pendingIntent)
+        }
     }
 
     private fun computeNextTrigger(nowMillis: Long, hour: Int, minute: Int): Long {

@@ -53,6 +53,8 @@ import com.example.healthmateai.ui.theme.BgDark
 import com.example.healthmateai.ui.theme.BgDarkAlt
 import com.example.healthmateai.ui.theme.GradientEnd
 import com.example.healthmateai.ui.theme.GradientStart
+import com.example.healthmateai.ui.viewmodel.PredictionViewModel
+import com.example.healthmateai.ui.viewmodel.PredictionViewModelFactory
 
 private data class AppTab(
     val route: String,
@@ -74,10 +76,10 @@ fun PremiumAppScaffold(
 ) {
     val navController = rememberNavController()
     val insightsViewModel: HealthInsightsViewModel = viewModel()
+    val predictionViewModel: PredictionViewModel = viewModel(factory = PredictionViewModelFactory)
 
-    var diabetesRisk by remember { mutableStateOf(0.36f) }
-    var heartRisk by remember { mutableStateOf(0.42f) }
     val snapshot by insightsViewModel.snapshot.collectAsState()
+    val predictionState by predictionViewModel.uiState.collectAsState()
 
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
@@ -201,9 +203,8 @@ fun PremiumAppScaffold(
         ) {
             composable(AppRoutes.DASHBOARD) {
                 DashboardScreen(
-                    userName = userName ?: "Dhanush",
-                    diabetesRisk = diabetesRisk,
-                    heartRisk = heartRisk,
+                    userName = userName ?: "User",
+                    uiState = predictionState,
                     onQuickAction = { action ->
                         val route = when (action) {
                             QuickAction.DietPlanner -> AppRoutes.DIET_PLANNER
@@ -219,21 +220,18 @@ fun PremiumAppScaffold(
                 PredictionScreen(
                     contentPadding = PaddingValues(bottom = 12.dp),
                     onPrediction = { disease, probability, inputs ->
-                        if (disease == "diabetes") {
-                            diabetesRisk = probability
-                        } else {
-                            heartRisk = probability
-                        }
                         insightsViewModel.updatePrediction(disease, probability, inputs)
-                    }
+                    },
+                    viewModel = predictionViewModel
                 )
             }
 
             composable(AppRoutes.PROFILE) {
                 ProfileScreen(
-                    userName = userName ?: "Dhanush",
-                    userEmail = userEmail ?: "dhanush@healthmate.ai",
-                    onLogout = onLogout
+                    userName = userName ?: "User",
+                    userEmail = userEmail ?: "user@healthmate.ai",
+                    onLogout = onLogout,
+                    healthSnapshot = snapshot
                 )
             }
 

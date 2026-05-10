@@ -13,5 +13,6 @@ data class MedicineReminderEntity(
     val minute: Int,
     val frequency: ReminderFrequency,
     val customIntervalHours: Int?,
-    val nextTriggerAtMillis: Long
+    val nextTriggerAtMillis: Long,
+    val isEnabled: Boolean = true
 )

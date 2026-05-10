@@ -75,6 +75,63 @@ class MedicineReminderViewModel(
         }
     }
 
+    fun updateReminder(
+        id: Long,
+        medicineName: String,
+        dosage: String,
+        hourOfDay: Int,
+        minute: Int,
+        frequency: ReminderFrequency,
+        customIntervalHours: Int?
+    ) {
+        if (medicineName.isBlank() || dosage.isBlank()) {
+            _uiState.value = MedicineReminderUiState(saveError = "Medicine name and dosage are required")
+            return
+        }
+
+        viewModelScope.launch {
+            _uiState.value = MedicineReminderUiState(isSaving = true)
+            runCatching {
+                repository.updateReminder(
+                    id = id,
+                    medicineName = medicineName.trim(),
+                    dosage = dosage.trim(),
+                    hourOfDay = hourOfDay,
+                    minute = minute,
+                    frequency = frequency,
+                    customIntervalHours = customIntervalHours
+                )
+            }.onSuccess {
+                _uiState.value = MedicineReminderUiState(successMessage = "Reminder updated")
+            }.onFailure { throwable ->
+                _uiState.value = MedicineReminderUiState(
+                    saveError = throwable.message ?: "Could not update reminder"
+                )
+            }
+        }
+    }
+
+    fun deleteReminder(id: Long) {
+        viewModelScope.launch {
+            runCatching { repository.deleteReminder(id) }
+                .onSuccess {
+                    _uiState.value = MedicineReminderUiState(successMessage = "Reminder deleted")
+                }
+                .onFailure {
+                    _uiState.value = MedicineReminderUiState(saveError = "Could not delete reminder")
+                }
+        }
+    }
+
+    fun toggleReminder(id: Long, enabled: Boolean) {
+        viewModelScope.launch {
+            runCatching { repository.toggleReminder(id, enabled) }
+                .onFailure {
+                    _uiState.value = MedicineReminderUiState(saveError = "Could not update reminder")
+                }
+        }
+    }
+
     fun clearTransientState() {
         _uiState.value = _uiState.value.copy(saveError = null, successMessage = null)
     }

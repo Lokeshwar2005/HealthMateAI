@@ -1,357 +1,281 @@
 package com.example.healthmateai.ui.screens
 
 import android.content.ActivityNotFoundException
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
-import androidx.compose.foundation.layout.FlowRow
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.Logout
-import androidx.compose.material.icons.filled.MedicalInformation
-import androidx.compose.material.icons.filled.LocalHospital
-import androidx.compose.material.icons.filled.Recommend
-import androidx.compose.material.icons.filled.Shield
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Divider
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.material.icons.automirrored.filled.*
+import androidx.compose.material.icons.filled.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.healthmateai.ui.theme.BgDark
-import com.example.healthmateai.ui.theme.HealthMateAITheme
+import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.healthmateai.ai.HealthPredictionSnapshot
+import com.example.healthmateai.ai.recommendations.RecommendationsViewModel
+import com.example.healthmateai.ui.theme.*
 
-private enum class ProfileDialog {
-    MedicalId,
-    Recommendations,
-    LogoutConfirm
-}
+private enum class ProfileDialog { MedicalId, Recommendations, LogoutConfirm }
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun ProfileScreen(
     userName: String,
     userEmail: String,
-    onLogout: () -> Unit
+    onLogout: () -> Unit,
+    healthSnapshot: HealthPredictionSnapshot = HealthPredictionSnapshot()
 ) {
     val context = LocalContext.current
     val scrollState = rememberScrollState()
     var activeDialog by remember { mutableStateOf<ProfileDialog?>(null) }
     var isLoggingOut by remember { mutableStateOf(false) }
 
+    // Medical ID state - persisted via SharedPreferences
+    val prefs = remember { context.getSharedPreferences("medical_id", Context.MODE_PRIVATE) }
+    var emergencyContact by remember { mutableStateOf(prefs.getString("emergency_contact", "") ?: "") }
+    var isEditingMedicalId by remember { mutableStateOf(false) }
+
+    // Recommendations VM
+    val recommendationsVm: RecommendationsViewModel = viewModel()
+    val recState by recommendationsVm.uiState.collectAsState()
+
     Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(BgDark)
-            .verticalScroll(scrollState)
+        modifier = Modifier.fillMaxSize().background(BgDark).verticalScroll(scrollState)
             .padding(horizontal = 20.dp, vertical = 22.dp),
         verticalArrangement = Arrangement.spacedBy(18.dp)
     ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
+        Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween) {
             Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                Text(
-                    text = "Profile",
-                    style = MaterialTheme.typography.headlineMedium,
-                    color = Color(0xFFF4F8FF),
-                    fontWeight = FontWeight.ExtraBold
-                )
-                Text(
-                    text = "Your personal health workspace",
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = Color(0xFF9BAED7)
-                )
+                Text("Profile", style = MaterialTheme.typography.headlineMedium, color = Color(0xFFF4F8FF), fontWeight = FontWeight.ExtraBold)
+                Text("Your personal health workspace", style = MaterialTheme.typography.bodyMedium, color = Color(0xFF9BAED7))
             }
-
-            IconButton(onClick = {
-                isLoggingOut = false
-                activeDialog = ProfileDialog.LogoutConfirm
-            }) {
-                Icon(
-                    imageVector = Icons.Default.Logout,
-                    contentDescription = "Logout",
-                    tint = Color(0xFFFF6B6B)
-                )
+            IconButton(onClick = { isLoggingOut = false; activeDialog = ProfileDialog.LogoutConfirm }) {
+                Icon(Icons.AutoMirrored.Filled.Logout, "Logout", tint = Color(0xFFFF6B6B))
             }
         }
 
-        ProfileHero(userName = userName, userEmail = userEmail)
+        ProfileHero(userName, userEmail)
 
-        SectionTitle(
-            title = "Health Utilities",
-            subtitle = "Fast access to essential profile tools"
-        )
+        SectionTitle("Health Utilities", "Fast access to essential profile tools")
 
-        FlowRow(
-            modifier = Modifier.fillMaxWidth(),
-            maxItemsInEachRow = 2,
-            horizontalArrangement = Arrangement.spacedBy(12.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            UtilityCard(
-                title = "Nearby Hospitals",
-                subtitle = "Open hospital search in Maps",
-                icon = Icons.Default.LocalHospital,
-                modifier = Modifier.weight(1f),
-                onClick = {
-                    val uri = Uri.parse("geo:0,0?q=hospitals near me")
-                    val intent = Intent(Intent.ACTION_VIEW, uri).apply {
-                        setPackage("com.google.android.apps.maps")
-                    }
-                    try {
-                        context.startActivity(intent)
-                    } catch (_: ActivityNotFoundException) {
-                        context.startActivity(Intent(Intent.ACTION_VIEW, uri))
-                    }
-                }
-            )
-            UtilityCard(
-                title = "Medical ID",
-                subtitle = "Personal health info",
-                icon = Icons.Default.MedicalInformation,
-                modifier = Modifier.weight(1f),
-                onClick = { activeDialog = ProfileDialog.MedicalId }
-            )
-            UtilityCard(
-                title = "AI Recommendations",
-                subtitle = "Personalized guidance",
-                icon = Icons.Default.Recommend,
-                modifier = Modifier.weight(1f),
-                onClick = { activeDialog = ProfileDialog.Recommendations }
-            )
+        FlowRow(Modifier.fillMaxWidth(), maxItemsInEachRow = 2, horizontalArrangement = Arrangement.spacedBy(12.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+            UtilityCard("Nearby Hospitals", "Open hospital search", Icons.Default.LocalHospital, Modifier.weight(1f)) {
+                val uri = Uri.parse("geo:0,0?q=hospitals near me")
+                val intent = Intent(Intent.ACTION_VIEW, uri).apply { setPackage("com.google.android.apps.maps") }
+                try { context.startActivity(intent) } catch (_: ActivityNotFoundException) { context.startActivity(Intent(Intent.ACTION_VIEW, uri)) }
+            }
+            UtilityCard("Medical ID", "Emergency info", Icons.Default.MedicalInformation, Modifier.weight(1f)) { activeDialog = ProfileDialog.MedicalId }
+            UtilityCard("AI Recommendations", "Personalized guidance", Icons.Default.Recommend, Modifier.weight(1f)) {
+                activeDialog = ProfileDialog.Recommendations
+                if (recState.sections.isEmpty() && !recState.isLoading) recommendationsVm.loadRecommendations(healthSnapshot)
+            }
         }
 
-        SectionTitle(
-            title = "Emergency",
-            subtitle = "Quick dial actions when you need them"
-        )
-
+        SectionTitle("Emergency", "Quick dial actions when you need them")
         Row(horizontalArrangement = Arrangement.spacedBy(12.dp), modifier = Modifier.fillMaxWidth()) {
-            EmergencyActionCard(
-                title = "Ambulance",
-                number = "108",
-                icon = Icons.Default.Favorite,
-                modifier = Modifier.weight(1f),
-                onClick = {
-                    val intent = Intent(Intent.ACTION_DIAL, Uri.parse("tel:108"))
-                    context.startActivity(intent)
-                }
-            )
-            EmergencyActionCard(
-                title = "Police",
-                number = "100",
-                icon = Icons.Default.Shield,
-                modifier = Modifier.weight(1f),
-                onClick = {
-                    val intent = Intent(Intent.ACTION_DIAL, Uri.parse("tel:100"))
-                    context.startActivity(intent)
-                }
-            )
+            EmergencyActionCard("Ambulance", "108", Icons.Default.Favorite, Modifier.weight(1f)) { context.startActivity(Intent(Intent.ACTION_DIAL, Uri.parse("tel:108"))) }
+            EmergencyActionCard("Police", "100", Icons.Default.Shield, Modifier.weight(1f)) { context.startActivity(Intent(Intent.ACTION_DIAL, Uri.parse("tel:100"))) }
         }
-
-        Spacer(modifier = Modifier.height(6.dp))
+        Spacer(Modifier.height(6.dp))
     }
 
     when (activeDialog) {
         ProfileDialog.MedicalId -> {
             AlertDialog(
-                onDismissRequest = { activeDialog = null },
-                title = { Text("Medical ID") },
+                onDismissRequest = { activeDialog = null; isEditingMedicalId = false },
+                containerColor = Color(0xFF141E36), titleContentColor = TextPrimary,
+                title = {
+                    Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                        Surface(shape = RoundedCornerShape(10.dp), color = AccentCyan.copy(alpha = 0.15f)) {
+                            Icon(Icons.Default.MedicalInformation, null, tint = AccentCyan, modifier = Modifier.padding(6.dp))
+                        }
+                        Text("Medical ID", fontWeight = FontWeight.Bold)
+                    }
+                },
                 text = {
-                    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                        Text("Name: $userName")
-                        Text("Email: $userEmail")
-                        Text("Blood type: Not set")
-                        Text("Allergies: Not set")
-                        Text("Emergency contact: Add in settings")
+                    Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                        MedicalIdRow(icon = Icons.Default.Person, label = "Name", value = userName)
+                        HorizontalDivider(color = SurfaceOutline.copy(alpha = 0.4f))
+                        MedicalIdRow(icon = Icons.Default.Email, label = "Email", value = userEmail)
+                        HorizontalDivider(color = SurfaceOutline.copy(alpha = 0.4f))
+
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Icon(Icons.Default.Phone, null, tint = AccentCyan, modifier = Modifier.size(20.dp))
+                            Spacer(Modifier.width(10.dp))
+                            Column(Modifier.weight(1f)) {
+                                Text("Emergency Contact", color = TextSecondary, fontSize = 12.sp)
+                                if (isEditingMedicalId) {
+                                    OutlinedTextField(
+                                        value = emergencyContact, onValueChange = { emergencyContact = it },
+                                        placeholder = { Text("Enter phone number") },
+                                        modifier = Modifier.fillMaxWidth(),
+                                        shape = RoundedCornerShape(10.dp), singleLine = true,
+                                        colors = OutlinedTextFieldDefaults.colors(
+                                            focusedBorderColor = AccentCyan, unfocusedBorderColor = SurfaceOutline,
+                                            focusedContainerColor = SurfaceCardAlt, unfocusedContainerColor = SurfaceCardAlt,
+                                            cursorColor = AccentCyan, focusedTextColor = TextPrimary, unfocusedTextColor = TextPrimary
+                                        )
+                                    )
+                                } else {
+                                    Text(emergencyContact.ifBlank { "Not set" }, color = TextPrimary, fontWeight = FontWeight.Medium)
+                                }
+                            }
+                        }
                     }
                 },
                 confirmButton = {
-                    Button(onClick = { activeDialog = null }) { Text("Close") }
-                }
+                    if (isEditingMedicalId) {
+                        Button(onClick = {
+                            prefs.edit().putString("emergency_contact", emergencyContact).apply()
+                            isEditingMedicalId = false
+                        }, colors = ButtonDefaults.buttonColors(containerColor = AccentCyan, contentColor = BgDark)) {
+                            Icon(Icons.Default.Save, null, Modifier.size(16.dp)); Spacer(Modifier.width(4.dp)); Text("Save")
+                        }
+                    } else {
+                        Button(onClick = { isEditingMedicalId = true }, colors = ButtonDefaults.buttonColors(containerColor = AccentBlue)) {
+                            Icon(Icons.Default.Edit, null, Modifier.size(16.dp)); Spacer(Modifier.width(4.dp)); Text("Edit")
+                        }
+                    }
+                },
+                dismissButton = { OutlinedButton(onClick = { activeDialog = null; isEditingMedicalId = false }) { Text("Close", color = TextSecondary) } }
             )
         }
 
         ProfileDialog.Recommendations -> {
             AlertDialog(
                 onDismissRequest = { activeDialog = null },
-                title = { Text("AI Recommendations") },
-                text = {
-                    Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                        Text("• Stay hydrated and keep a routine checkup schedule.")
-                        Text("• Review prediction trends before making decisions.")
-                        Text("• Open the prediction tab for a fresh risk analysis.")
+                containerColor = Color(0xFF0F1A30), titleContentColor = TextPrimary,
+                title = {
+                    Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                        Surface(shape = RoundedCornerShape(10.dp), color = AccentGreen.copy(alpha = 0.15f)) {
+                            Icon(Icons.Default.Recommend, null, tint = AccentGreen, modifier = Modifier.padding(6.dp))
+                        }
+                        Text("AI Recommendations", fontWeight = FontWeight.Bold)
                     }
                 },
-                confirmButton = {
-                    Button(onClick = { activeDialog = null }) { Text("Great") }
-                }
+                text = {
+                    Column(verticalArrangement = Arrangement.spacedBy(10.dp), modifier = Modifier.heightIn(max = 400.dp).verticalScroll(rememberScrollState())) {
+                        when {
+                            recState.isLoading -> {
+                                Box(Modifier.fillMaxWidth().padding(24.dp), contentAlignment = Alignment.Center) {
+                                    Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                                        CircularProgressIndicator(color = AccentCyan, modifier = Modifier.size(36.dp))
+                                        Text("Generating personalized recommendations...", color = TextSecondary, fontSize = 13.sp)
+                                    }
+                                }
+                            }
+                            recState.error != null -> {
+                                Surface(shape = RoundedCornerShape(12.dp), color = Color(0xFF3B1D24), border = BorderStroke(1.dp, Color(0xFF5B2D34))) {
+                                    Column(Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                                        Text(recState.error ?: "Error", color = Color(0xFFFF8C8C), fontSize = 13.sp)
+                                        Button(onClick = { recommendationsVm.retry(healthSnapshot) }, colors = ButtonDefaults.buttonColors(containerColor = AccentCyan, contentColor = BgDark)) {
+                                            Text("Retry")
+                                        }
+                                    }
+                                }
+                            }
+                            !healthSnapshot.hasPredictionData -> {
+                                Text("Run a health prediction first to get personalized AI recommendations.", color = TextSecondary, fontSize = 14.sp)
+                            }
+                            else -> {
+                                recState.sections.forEach { section ->
+                                    Surface(shape = RoundedCornerShape(14.dp), color = Color(0xFF162340), border = BorderStroke(1.dp, SurfaceOutline.copy(alpha = 0.4f))) {
+                                        Column(Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                                            Text("${section.emoji} ${section.title}", color = Color(0xFFE6F0FF), style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.Bold)
+                                            section.items.forEach { item ->
+                                                Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                                                    Text("•", color = AccentCyan)
+                                                    Text(item, color = Color(0xFFB8C9EA), style = MaterialTheme.typography.bodyMedium)
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                confirmButton = { Button(onClick = { activeDialog = null }) { Text("Done") } }
             )
         }
 
         ProfileDialog.LogoutConfirm -> {
             AlertDialog(
-                onDismissRequest = {
-                    if (!isLoggingOut) {
-                        activeDialog = null
-                    }
-                },
+                onDismissRequest = { if (!isLoggingOut) activeDialog = null },
+                containerColor = SurfaceCard, titleContentColor = TextPrimary, textContentColor = TextSecondary,
                 title = { Text("Sign out of HealthMateAI?") },
                 text = { Text("You will need to log in again to access your dashboard.") },
                 confirmButton = {
-                    Button(
-                        onClick = {
-                            if (isLoggingOut) return@Button
-                            isLoggingOut = true
-                            onLogout()
-                            activeDialog = null
-                        },
-                        enabled = !isLoggingOut,
-                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFF6B6B))
-                    ) {
-                        Text(if (isLoggingOut) "Logging out..." else "Logout")
-                    }
+                    Button(onClick = { if (!isLoggingOut) { isLoggingOut = true; onLogout(); activeDialog = null } },
+                        enabled = !isLoggingOut, colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFF6B6B))
+                    ) { Text(if (isLoggingOut) "Logging out..." else "Logout") }
                 },
-                dismissButton = {
-                    OutlinedButton(
-                        onClick = { activeDialog = null },
-                        enabled = !isLoggingOut
-                    ) {
-                        Text("Cancel")
-                    }
-                }
+                dismissButton = { OutlinedButton(onClick = { activeDialog = null }, enabled = !isLoggingOut) { Text("Cancel") } }
             )
         }
-
         null -> Unit
+    }
+}
+
+@Composable
+private fun MedicalIdRow(icon: ImageVector, label: String, value: String) {
+    Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+        Icon(icon, null, tint = AccentCyan, modifier = Modifier.size(20.dp))
+        Column {
+            Text(label, color = TextSecondary, fontSize = 12.sp)
+            Text(value, color = TextPrimary, fontWeight = FontWeight.Medium)
+        }
     }
 }
 
 @Composable
 private fun ProfileHero(userName: String, userEmail: String) {
     val shimmerTransition = rememberInfiniteTransition(label = "profileHero")
-    val shimmerAlpha by shimmerTransition.animateFloat(
-        initialValue = 0.08f,
-        targetValue = 0.18f,
-        animationSpec = infiniteRepeatable(animation = tween(1800), repeatMode = RepeatMode.Reverse),
-        label = "profileHeroAlpha"
-    )
-    val pulse by shimmerTransition.animateFloat(
-        initialValue = 1f,
-        targetValue = 1.08f,
-        animationSpec = infiniteRepeatable(animation = tween(1800), repeatMode = RepeatMode.Reverse),
-        label = "avatarPulse"
-    )
+    val shimmerAlpha by shimmerTransition.animateFloat(0.08f, 0.18f, infiniteRepeatable(tween(1800), RepeatMode.Reverse), label = "a")
+    val pulse by shimmerTransition.animateFloat(1f, 1.08f, infiniteRepeatable(tween(1800), RepeatMode.Reverse), label = "b")
 
-    val cardShape = RoundedCornerShape(18.dp)
-    Card(
-        modifier = Modifier
-            .fillMaxWidth(),
-        shape = cardShape,
-        colors = CardDefaults.cardColors(containerColor = Color(0xFF16254A)),
-        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
-    ) {
-        Column(
-            modifier = Modifier.padding(20.dp),
-            verticalArrangement = Arrangement.spacedBy(14.dp)
-        ) {
+    Card(Modifier.fillMaxWidth(), shape = RoundedCornerShape(18.dp), colors = CardDefaults.cardColors(containerColor = Color(0xFF16254A)), elevation = CardDefaults.cardElevation(8.dp)) {
+        Column(Modifier.padding(20.dp), verticalArrangement = Arrangement.spacedBy(14.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(14.dp)) {
-                Surface(
-                    modifier = Modifier
-                        .size(76.dp)
-                        .graphicsLayer {
-                            scaleX = pulse
-                            scaleY = pulse
-                        },
-                    shape = CircleShape,
-                    color = Color(0xFF2BB9FF)
-                ) {
-                    Surface(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(3.dp),
-                        shape = CircleShape,
-                        color = Color(0xFF0F1830)
-                    ) {
-                        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                            Text(
-                                text = userName.firstOrNull()?.uppercaseChar()?.toString() ?: "U",
-                                style = MaterialTheme.typography.headlineMedium,
-                                fontWeight = FontWeight.ExtraBold,
-                                color = Color(0xFFF6FAFF)
-                            )
+                Surface(Modifier.size(76.dp).graphicsLayer { scaleX = pulse; scaleY = pulse }, shape = CircleShape, color = Color(0xFF2BB9FF)) {
+                    Surface(Modifier.fillMaxSize().padding(3.dp), shape = CircleShape, color = Color(0xFF0F1830)) {
+                        Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                            Text(userName.firstOrNull()?.uppercaseChar()?.toString() ?: "U", style = MaterialTheme.typography.headlineMedium, fontWeight = FontWeight.ExtraBold, color = Color(0xFFF6FAFF))
                         }
                     }
                 }
-
-                Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                    Text(
-                        text = userName,
-                        style = MaterialTheme.typography.headlineSmall,
-                        color = Color(0xFFF4F8FF),
-                        fontWeight = FontWeight.ExtraBold
-                    )
-                    Text(
-                        text = userEmail,
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = Color(0xFFC9D7F4)
-                    )
+                Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                    Text(userName, style = MaterialTheme.typography.headlineSmall, color = Color(0xFFF4F8FF), fontWeight = FontWeight.ExtraBold)
+                    Text(userEmail, style = MaterialTheme.typography.bodyMedium, color = Color(0xFFC9D7F4))
                 }
             }
-
-            Divider(color = Color.White.copy(alpha = 0.08f))
-
-            Text(
-                text = "Your AI-backed health workspace is ready.",
-                style = MaterialTheme.typography.bodyLarge,
-                color = Color(0xFFE1EAFB).copy(alpha = shimmerAlpha),
-                fontWeight = FontWeight.Medium
-            )
+            HorizontalDivider(color = Color.White.copy(alpha = 0.08f))
+            Text("Your AI-backed health workspace is ready.", style = MaterialTheme.typography.bodyLarge, color = Color(0xFFE1EAFB).copy(alpha = shimmerAlpha), fontWeight = FontWeight.Medium)
         }
     }
 }
@@ -359,140 +283,39 @@ private fun ProfileHero(userName: String, userEmail: String) {
 @Composable
 private fun SectionTitle(title: String, subtitle: String) {
     Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-        Text(
-            text = title,
-            style = MaterialTheme.typography.titleLarge,
-            color = Color(0xFFF4F8FF),
-            fontWeight = FontWeight.Bold
-        )
-        Text(
-            text = subtitle,
-            style = MaterialTheme.typography.bodyMedium,
-            color = Color(0xFF9BAED7)
-        )
+        Text(title, style = MaterialTheme.typography.titleLarge, color = Color(0xFFF4F8FF), fontWeight = FontWeight.Bold)
+        Text(subtitle, style = MaterialTheme.typography.bodyMedium, color = Color(0xFF9BAED7))
     }
 }
 
 @Composable
-private fun UtilityCard(
-    title: String,
-    subtitle: String,
-    icon: androidx.compose.ui.graphics.vector.ImageVector,
-    modifier: Modifier = Modifier,
-    onClick: () -> Unit
-) {
+private fun UtilityCard(title: String, subtitle: String, icon: ImageVector, modifier: Modifier = Modifier, onClick: () -> Unit) {
     val interactionSource = remember { MutableInteractionSource() }
     val pressed by interactionSource.collectIsPressedAsState()
-    val scale by animateFloatAsState(
-        targetValue = if (pressed) 0.98f else 1f,
-        animationSpec = tween(120),
-        label = "utilityScale"
-    )
-
-    Card(
-        onClick = onClick,
-        interactionSource = interactionSource,
-        modifier = modifier.graphicsLayer {
-            scaleX = scale
-            scaleY = scale
-        },
-        shape = RoundedCornerShape(18.dp),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFF151F3B)),
-        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(14.dp),
-            verticalArrangement = Arrangement.spacedBy(10.dp)
-        ) {
-            Icon(
-                imageVector = icon,
-                contentDescription = title,
-                tint = Color(0xFF59E6FF),
-                modifier = Modifier.size(24.dp)
-            )
+    val scale by animateFloatAsState(if (pressed) 0.98f else 1f, tween(120), label = "s")
+    Card(onClick = onClick, interactionSource = interactionSource, modifier = modifier.graphicsLayer { scaleX = scale; scaleY = scale },
+        shape = RoundedCornerShape(18.dp), colors = CardDefaults.cardColors(containerColor = Color(0xFF151F3B)), elevation = CardDefaults.cardElevation(8.dp)) {
+        Column(Modifier.fillMaxWidth().padding(14.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
+            Icon(icon, title, tint = Color(0xFF59E6FF), modifier = Modifier.size(24.dp))
             Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                Text(
-                    text = title,
-                    style = MaterialTheme.typography.titleMedium,
-                    color = Color(0xFFF4F8FF),
-                    fontWeight = FontWeight.SemiBold
-                )
-                Text(
-                    text = subtitle,
-                    style = MaterialTheme.typography.bodySmall,
-                    color = Color(0xFFB5C4E4)
-                )
+                Text(title, style = MaterialTheme.typography.titleMedium, color = Color(0xFFF4F8FF), fontWeight = FontWeight.SemiBold)
+                Text(subtitle, style = MaterialTheme.typography.bodySmall, color = Color(0xFFB5C4E4))
             }
         }
     }
 }
 
 @Composable
-private fun EmergencyActionCard(
-    title: String,
-    number: String,
-    icon: androidx.compose.ui.graphics.vector.ImageVector,
-    modifier: Modifier = Modifier,
-    onClick: () -> Unit
-) {
+private fun EmergencyActionCard(title: String, number: String, icon: ImageVector, modifier: Modifier = Modifier, onClick: () -> Unit) {
     val interactionSource = remember { MutableInteractionSource() }
     val pressed by interactionSource.collectIsPressedAsState()
-    val scale by animateFloatAsState(
-        targetValue = if (pressed) 0.98f else 1f,
-        animationSpec = tween(120),
-        label = "emergencyScale"
-    )
-
-    Card(
-        onClick = onClick,
-        interactionSource = interactionSource,
-        modifier = modifier.graphicsLayer {
-            scaleX = scale
-            scaleY = scale
-        },
-        shape = RoundedCornerShape(18.dp),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFF151F3B)),
-        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 18.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            Icon(
-                imageVector = icon,
-                contentDescription = title,
-                tint = Color(0xFF59E6FF),
-                modifier = Modifier.size(24.dp)
-            )
-            Text(
-                text = title,
-                style = MaterialTheme.typography.titleSmall,
-                color = Color(0xFFF4F8FF),
-                fontWeight = FontWeight.SemiBold
-            )
-            Text(
-                text = number,
-                style = MaterialTheme.typography.titleLarge,
-                color = Color(0xFF59E6FF),
-                fontWeight = FontWeight.ExtraBold
-            )
+    val scale by animateFloatAsState(if (pressed) 0.98f else 1f, tween(120), label = "e")
+    Card(onClick = onClick, interactionSource = interactionSource, modifier = modifier.graphicsLayer { scaleX = scale; scaleY = scale },
+        shape = RoundedCornerShape(18.dp), colors = CardDefaults.cardColors(containerColor = Color(0xFF151F3B)), elevation = CardDefaults.cardElevation(8.dp)) {
+        Column(Modifier.fillMaxWidth().padding(vertical = 18.dp), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            Icon(icon, title, tint = Color(0xFF59E6FF), modifier = Modifier.size(24.dp))
+            Text(title, style = MaterialTheme.typography.titleSmall, color = Color(0xFFF4F8FF), fontWeight = FontWeight.SemiBold)
+            Text(number, style = MaterialTheme.typography.titleLarge, color = Color(0xFF59E6FF), fontWeight = FontWeight.ExtraBold)
         }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-private fun ProfilePreview() {
-    HealthMateAITheme {
-        ProfileScreen(
-            userName = "Dhanush",
-            userEmail = "dhanush@healthmate.ai",
-            onLogout = {}
-        )
     }
 }

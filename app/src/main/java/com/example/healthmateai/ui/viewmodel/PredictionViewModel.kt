@@ -15,7 +15,14 @@ import kotlinx.coroutines.launch
 data class PredictionUiState(
     val isLoading: Boolean = false,
     val result: PredictionResponse? = null,
-    val errorMessage: String? = null
+    val errorMessage: String? = null,
+    val diabetesRiskPercent: Int? = null,
+    val diabetesRiskLevel: String? = null,
+    val heartRiskPercent: Int? = null,
+    val heartRiskLevel: String? = null,
+    val keyFactors: List<String> = emptyList(),
+    val medicalAdvice: String? = null,
+    val timestamp: Long = 0L
 )
 
 class PredictionViewModel(
@@ -36,10 +43,32 @@ class PredictionViewModel(
                         inputs = inputs
                     )
                 )
-                _uiState.value = PredictionUiState(result = response)
+                val percent = (response.probability * 100).toInt()
+                if (disease.equals("diabetes", ignoreCase = true)) {
+                    _uiState.value = _uiState.value.copy(
+                        isLoading = false,
+                        result = response,
+                        diabetesRiskPercent = percent,
+                        diabetesRiskLevel = response.risk,
+                        keyFactors = response.factors,
+                        medicalAdvice = response.advice,
+                        timestamp = System.currentTimeMillis()
+                    )
+                } else {
+                    _uiState.value = _uiState.value.copy(
+                        isLoading = false,
+                        result = response,
+                        heartRiskPercent = percent,
+                        heartRiskLevel = response.risk,
+                        keyFactors = response.factors,
+                        medicalAdvice = response.advice,
+                        timestamp = System.currentTimeMillis()
+                    )
+                }
             } catch (exception: Exception) {
                 Log.e("PredictionViewModel", "Prediction failed", exception)
-                _uiState.value = PredictionUiState(
+                _uiState.value = _uiState.value.copy(
+                    isLoading = false,
                     errorMessage = exception.message ?: "Prediction request failed"
                 )
             }

@@ -6,6 +6,7 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
@@ -54,17 +55,22 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.healthmateai.ui.theme.BgDark
 import com.example.healthmateai.ui.theme.HealthMateAITheme
+import com.example.healthmateai.ui.theme.AccentCyan
+import com.example.healthmateai.ui.theme.SurfaceOutline
 import java.util.Calendar
 
 enum class QuickAction { DietPlanner, MedicineReminder, Chatbot }
 
 private data class RiskSummary(
     val title: String,
-    val value: Float
+    val value: Float,
+    val riskLevel: String?,
+    val hasPrediction: Boolean
 )
 
 private data class ActionItem(
@@ -79,8 +85,7 @@ private data class ActionItem(
 @Composable
 fun DashboardScreen(
     userName: String,
-    diabetesRisk: Float,
-    heartRisk: Float,
+    uiState: com.example.healthmateai.ui.viewmodel.PredictionUiState,
     onQuickAction: (QuickAction) -> Unit
 ) {
     val listState = rememberLazyListState()
@@ -94,8 +99,18 @@ fun DashboardScreen(
     }
 
     val cards = listOf(
-        RiskSummary(title = "Diabetes Risk", value = diabetesRisk),
-        RiskSummary(title = "Heart Risk", value = heartRisk)
+        RiskSummary(
+            title = "Diabetes Risk", 
+            value = (uiState.diabetesRiskPercent ?: 0) / 100f, 
+            riskLevel = uiState.diabetesRiskLevel,
+            hasPrediction = uiState.diabetesRiskPercent != null
+        ),
+        RiskSummary(
+            title = "Heart Risk", 
+            value = (uiState.heartRiskPercent ?: 0) / 100f, 
+            riskLevel = uiState.heartRiskLevel,
+            hasPrediction = uiState.heartRiskPercent != null
+        )
     )
 
     val chatbotAction = ActionItem(
@@ -137,7 +152,7 @@ fun DashboardScreen(
             SectionHeader(title = "Health Summary", subtitle = "Live risk trends from your latest inputs")
         }
         items(cards) { item ->
-            RiskCard(title = item.title, progress = item.value)
+            RiskCard(title = item.title, progress = item.value, riskLevel = item.riskLevel, hasPrediction = item.hasPrediction)
         }
         item {
             SectionHeader(title = "Quick Actions", subtitle = "Shortcuts to your AI health workspace")
@@ -217,7 +232,7 @@ private fun HeroHeader(greeting: String, userName: String) {
                     fontWeight = FontWeight.ExtraBold
                 )
                 Text(
-                    text = "Your health score improved today",
+                    text = "Your AI health workspace is ready",
                     style = MaterialTheme.typography.bodyLarge,
                     color = Color(0xFFD0DCF6).copy(alpha = shimmerAlpha)
                 )
@@ -229,7 +244,7 @@ private fun HeroHeader(greeting: String, userName: String) {
                 shape = RoundedCornerShape(18.dp),
                 color = Color(0x2A45E2FF),
                 shadowElevation = 8.dp,
-                border = androidx.compose.foundation.BorderStroke(1.dp, Color(0x664CE2FF))
+                border = BorderStroke(1.dp, Color(0x664CE2FF))
             ) {
                 Box(contentAlignment = Alignment.Center) {
                     Icon(
@@ -245,25 +260,14 @@ private fun HeroHeader(greeting: String, userName: String) {
 }
 
 @Composable
-private fun RiskCard(title: String, progress: Float) {
+private fun RiskCard(title: String, progress: Float, riskLevel: String?, hasPrediction: Boolean) {
     val targetValue = remember { mutableStateOf(0f) }
     LaunchedEffect(progress) { targetValue.value = progress.coerceIn(0f, 1f) }
     val animatedProgress by animateFloatAsState(
-        targetValue = targetValue.value,
+        targetValue = if (hasPrediction) targetValue.value else 0f,
         animationSpec = tween(durationMillis = 1200),
         label = "riskRing"
     )
-
-    val riskColor = when {
-        animatedProgress < 0.35f -> Color(0xFF36E49F)
-        animatedProgress < 0.65f -> Color(0xFFF8D34B)
-        else -> Color(0xFFFF6B6B)
-    }
-    val riskLabel = when {
-        animatedProgress < 0.35f -> "Low"
-        animatedProgress < 0.65f -> "Medium"
-        else -> "High"
-    }
 
     val interactionSource = remember { MutableInteractionSource() }
     val pressed by interactionSource.collectIsPressedAsState()
@@ -301,48 +305,98 @@ private fun RiskCard(title: String, progress: Float) {
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(14.dp)
             ) {
-                Box(contentAlignment = Alignment.Center, modifier = Modifier.size(70.dp)) {
-                    CircularProgressIndicator(
-                        progress = { animatedProgress },
-                        modifier = Modifier.size(66.dp),
-                        strokeWidth = 7.dp,
-                        trackColor = Color(0xFF202B50),
-                        color = riskColor,
-                        strokeCap = StrokeCap.Round
-                    )
-                    Text(
-                        text = "${(animatedProgress * 100).toInt()}%",
-                        style = MaterialTheme.typography.labelLarge,
-                        color = Color(0xFFF2F6FF),
-                        fontWeight = FontWeight.Bold
-                    )
-                }
+                if (hasPrediction) {
+                    val displayRiskLabel = riskLevel ?: when {
+                        animatedProgress < 0.35f -> "Low"
+                        animatedProgress < 0.65f -> "Medium"
+                        else -> "High"
+                    }
+                    
+                    val riskColor = when (displayRiskLabel.lowercase()) {
+                        "high" -> Color(0xFFFF6B6B)
+                        "medium" -> Color(0xFFF2B84B)
+                        "low" -> Color(0xFF2BD4A4)
+                        else -> Color(0xFF58E5FF)
+                    }
 
-                Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                    Text(
-                        title,
-                        style = MaterialTheme.typography.titleLarge,
-                        fontWeight = FontWeight.Bold,
-                        color = Color(0xFFF1F6FF)
-                    )
-                    Text(
-                        text = "Current Risk: $riskLabel",
-                        style = MaterialTheme.typography.bodyLarge,
-                        color = Color(0xFFC5D1EC)
-                    )
-                }
+                    Box(contentAlignment = Alignment.Center, modifier = Modifier.size(70.dp)) {
+                        CircularProgressIndicator(
+                            progress = { animatedProgress },
+                            modifier = Modifier.size(66.dp),
+                            strokeWidth = 7.dp,
+                            trackColor = Color(0xFF202B50),
+                            color = riskColor,
+                            strokeCap = StrokeCap.Round
+                        )
+                        Text(
+                            text = "${(animatedProgress * 100).toInt()}%",
+                            style = MaterialTheme.typography.labelLarge,
+                            color = Color(0xFFF2F6FF),
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
 
-                Surface(
-                    shape = RoundedCornerShape(12.dp),
-                    color = Color(0x1A52E6FF),
-                    border = androidx.compose.foundation.BorderStroke(1.dp, Color(0x5548DFFF))
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.AutoGraph,
-                        contentDescription = title,
-                        tint = Color(0xFF58E5FF),
-                        modifier = Modifier.padding(10.dp)
-                    )
+                    Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                        Text(
+                            title,
+                            style = MaterialTheme.typography.titleLarge,
+                            fontWeight = FontWeight.Bold,
+                            color = Color(0xFFF1F6FF)
+                        )
+                        Text(
+                            text = "Current Risk: $displayRiskLabel",
+                            style = MaterialTheme.typography.bodyLarge,
+                            color = Color(0xFFC5D1EC)
+                        )
+                    }
+
+                    Surface(
+                        shape = RoundedCornerShape(12.dp),
+                        color = Color(0x1A52E6FF),
+                        border = BorderStroke(1.dp, Color(0x5548DFFF))
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.AutoGraph,
+                            contentDescription = title,
+                            tint = Color(0xFF58E5FF),
+                            modifier = Modifier.padding(10.dp)
+                        )
+                    }
+                } else {
+                    // No prediction data state
+                    Surface(
+                        shape = RoundedCornerShape(14.dp),
+                        color = Color(0xFF1A2540),
+                        modifier = Modifier.size(70.dp)
+                    ) {
+                        Box(contentAlignment = Alignment.Center) {
+                            Icon(
+                                imageVector = Icons.Default.QueryStats,
+                                contentDescription = null,
+                                tint = Color(0xFF4A5E80),
+                                modifier = Modifier.size(28.dp)
+                            )
+                        }
+                    }
+
+                    Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                        Text(
+                            title,
+                            style = MaterialTheme.typography.titleLarge,
+                            fontWeight = FontWeight.Bold,
+                            color = Color(0xFFF1F6FF)
+                        )
+                        Text(
+                            text = "No prediction data available yet",
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = Color(0xFF7B8DAF)
+                        )
+                        Text(
+                            text = "Run a prediction to see your risk",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = AccentCyan.copy(alpha = 0.7f)
+                        )
+                    }
                 }
             }
         }
@@ -391,7 +445,7 @@ private fun PrimaryQuickActionCard(
                 Surface(
                     color = Color(0x1F42E2FF),
                     shape = RoundedCornerShape(14.dp),
-                    border = androidx.compose.foundation.BorderStroke(1.dp, Color(0x8049DFFF))
+                    border = BorderStroke(1.dp, Color(0x8049DFFF))
                 ) {
                     Icon(
                         imageVector = item.icon,
@@ -417,7 +471,7 @@ private fun PrimaryQuickActionCard(
             Surface(
                 shape = RoundedCornerShape(12.dp),
                 color = Color(0x214FE8FF),
-                border = androidx.compose.foundation.BorderStroke(1.dp, Color(0x8852E8FF))
+                border = BorderStroke(1.dp, Color(0x8852E8FF))
             ) {
                 Text(
                     text = item.cta,
@@ -472,7 +526,7 @@ private fun SecondaryQuickActionCard(
             Surface(
                 color = Color(0x1946E5FF),
                 shape = RoundedCornerShape(12.dp),
-                border = androidx.compose.foundation.BorderStroke(1.dp, Color(0x6645DAFF))
+                border = BorderStroke(1.dp, Color(0x6645DAFF))
             ) {
                 Icon(
                     imageVector = item.icon,
@@ -511,8 +565,7 @@ private fun DashboardPreview() {
     HealthMateAITheme {
         DashboardScreen(
             userName = "Dhanush",
-            diabetesRisk = 0.36f,
-            heartRisk = 0.42f,
+            uiState = com.example.healthmateai.ui.viewmodel.PredictionUiState(),
             onQuickAction = {}
         )
     }

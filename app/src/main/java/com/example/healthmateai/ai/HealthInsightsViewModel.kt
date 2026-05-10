@@ -8,11 +8,16 @@ import kotlinx.coroutines.flow.asStateFlow
 data class HealthPredictionSnapshot(
     val diabetesRisk: Float = 0f,
     val heartRisk: Float = 0f,
+    val hasDiabetesPrediction: Boolean = false,
+    val hasHeartPrediction: Boolean = false,
     val age: Int? = null,
     val bmi: Float? = null,
     val weight: Float? = null,
     val lifestyleSummary: String = "Not enough lifestyle data yet"
-)
+) {
+    val hasPredictionData: Boolean
+        get() = hasDiabetesPrediction || hasHeartPrediction
+}
 
 class HealthInsightsViewModel : ViewModel() {
 
@@ -40,6 +45,7 @@ class HealthInsightsViewModel : ViewModel() {
         _snapshot.value = if (disease.equals("diabetes", ignoreCase = true)) {
             current.copy(
                 diabetesRisk = probability,
+                hasDiabetesPrediction = true,
                 age = age,
                 bmi = bmi,
                 weight = weight,
@@ -48,6 +54,7 @@ class HealthInsightsViewModel : ViewModel() {
         } else {
             current.copy(
                 heartRisk = probability,
+                hasHeartPrediction = true,
                 age = age,
                 bmi = bmi,
                 weight = weight,

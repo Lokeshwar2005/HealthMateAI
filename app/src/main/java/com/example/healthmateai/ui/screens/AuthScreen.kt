@@ -3,6 +3,8 @@ package com.example.healthmateai.ui.screens
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.togetherWith
 import androidx.compose.animation.core.tween
 import androidx.compose.runtime.*
@@ -32,7 +34,18 @@ fun AuthScreen(
 
     AnimatedContent(
         targetState = showLoginScreen,
-        transitionSpec = { fadeIn(tween(220)) togetherWith fadeOut(tween(220)) }
+        transitionSpec = {
+            if (targetState) {
+                // Going back to login - slide from left
+                (slideInHorizontally { -it / 3 } + fadeIn(tween(300))) togetherWith
+                    (slideOutHorizontally { it / 3 } + fadeOut(tween(300)))
+            } else {
+                // Going to signup - slide from right
+                (slideInHorizontally { it / 3 } + fadeIn(tween(300))) togetherWith
+                    (slideOutHorizontally { -it / 3 } + fadeOut(tween(300)))
+            }
+        },
+        label = "authTransition"
     ) { isLogin ->
         if (isLogin) {
             LoginScreen(
@@ -61,4 +74,3 @@ fun AuthScreen(
         }
     }
 }
-
