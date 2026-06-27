@@ -1,5 +1,7 @@
 # HealthMateAI – Android Application Project Description
 
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/Lokeshwar2005/HealthMateAI)
+
 HealthMateAI is an AI-powered Android application designed to function as an Explainable Clinical Decision Support System (CDSS). The primary goal of the application is to assist users and healthcare professionals in predicting disease risks based on patient health data while also providing transparent explanations and evidence-based medical recommendations.
 
 The application integrates Machine Learning (ML), Explainable Artificial Intelligence (XAI), Retrieval-Augmented Generation (RAG), and a modular multi-agent architecture to ensure that predictions are not only accurate but also interpretable and trustworthy.
