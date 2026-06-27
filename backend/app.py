@@ -7,6 +7,16 @@ from openai import OpenAI
 
 app = Flask(__name__)
 
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+ENV_PATH = os.path.join(BASE_DIR, ".env")
+if os.path.exists(ENV_PATH):
+    with open(ENV_PATH, "r") as f:
+        for line in f:
+            line = line.strip()
+            if line and not line.startswith("#"):
+                key, _, value = line.partition("=")
+                os.environ[key.strip()] = value.strip()
+
 OPENROUTER_MODEL = os.getenv("OPENROUTER_MODEL", "openrouter/auto")
 OPENROUTER_FALLBACK_MODELS = [
     model.strip()
@@ -17,7 +27,6 @@ OPENROUTER_FALLBACK_MODELS = [
     if model.strip()
 ]
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 PROJECT_DIR = os.path.abspath(os.path.join(BASE_DIR, ".."))
 MODEL_DIR = os.path.join(PROJECT_DIR, "ml_notebooks")
 

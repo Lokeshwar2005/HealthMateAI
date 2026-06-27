@@ -20,3 +20,6 @@
 .externalNativeBuild
 .cxx
 local.properties
+.env
+backend/.env
+venv/
